@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block admin area from indexing
+Disallow: /admin
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /profile
+Disallow: /cart
+
+# Sitemap
+Sitemap: https://the-electric-plug.onrender.com/sitemap.xml

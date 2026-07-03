@@ -1,0 +1,12 @@
+Project details 
+
+Features:
+* Professional e-commerce website with admin dashboard.
+* Customer dashboard for tracking installment payments, orders, payment history, and account details.
+* Customers can browse products, add to cart, and pay online.
+* Installment Payment System: Customers can pay daily, weekly, or monthly until the product is fully paid for. Products are released only after full payment.
+* Buy & Pay Now: Customers pay the full amount instantly online.
+* Buy Now, Pay Later: Integrate Klump so eligible customers can receive their products immediately and repay in installments.
+* Email reminders for upcoming and overdue installment payments.
+* Order management, customer accounts, payment tracking, and notifications.
+* Responsive, fast, and SEO-friendly design.
