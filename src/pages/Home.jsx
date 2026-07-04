@@ -181,14 +181,14 @@ export default function Home() {
   ];
 
   const categoryCards = [
-    { label: 'Smart TVs', q: 'tv', gradient: 'linear-gradient(to bottom right, #1a1a2e, #16213e)', accent: '#4cc9f0' },
-    { label: 'Computing', q: 'laptop', gradient: 'linear-gradient(to bottom right, #0f3460, #533483)', accent: '#e94560' },
-    { label: 'Smartphones', q: 'smartphone', gradient: 'linear-gradient(to bottom right, #2d6a4f, #1b4332)', accent: '#52b788' },
-    { label: 'Power Solutions', q: 'generator', gradient: 'linear-gradient(to bottom right, #7b2d00, #bf360c)', accent: '#ffb703' },
-    { label: 'Home Appliances', q: 'appliance', gradient: 'linear-gradient(to bottom right, #1d3557, #457b9d)', accent: '#a8dadc' },
-    { label: 'Gaming', q: 'gaming', gradient: 'linear-gradient(to bottom right, #240046, #5a189a)', accent: '#c77dff' },
-    { label: 'Audio', q: 'headphone', gradient: 'linear-gradient(to bottom right, #2b2d42, #8d99ae)', accent: '#ef233c' },
-    { label: 'Cameras', q: 'camera', gradient: 'linear-gradient(to bottom right, #1b1b2f, #162447)', accent: '#e43f5a' },
+    { label: 'Smart TVs', q: 'tv', image: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&w=1000&auto=format&fit=crop', accent: '#4cc9f0' },
+    { label: 'Computing', q: 'laptop', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=1000&auto=format&fit=crop', accent: '#e94560' },
+    { label: 'Smartphones', q: 'smartphone', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop', accent: '#52b788' },
+    { label: 'Power Solutions', q: 'generator', image: 'https://images.unsplash.com/photo-1509391366360-128a3f858eb5?q=80&w=1000&auto=format&fit=crop', accent: '#ffb703' },
+    { label: 'Home Appliances', q: 'appliance', image: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=1000&auto=format&fit=crop', accent: '#a8dadc' },
+    { label: 'Gaming', q: 'gaming', image: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=1000&auto=format&fit=crop', accent: '#c77dff' },
+    { label: 'Audio', q: 'headphone', image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1000&auto=format&fit=crop', accent: '#ef233c' },
+    { label: 'Cameras', q: 'camera', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop', accent: '#e43f5a' },
   ];
 
   return (
@@ -272,12 +272,13 @@ export default function Home() {
               key={cat.q}
               to={`/shop?q=${cat.q}`}
               className="ref-cat-card"
-              style={{ background: cat.gradient }}
+              style={{ backgroundImage: `url(${cat.image})` }}
               aria-label={`Browse ${cat.label}`}
             >
+              <div className="ref-cat-card-overlay"></div>
               <div className="ref-cat-card-content">
                 <h3>{cat.label}</h3>
-                <span className="ref-cat-card-arrow" style={{ color: cat.accent }}>
+                <span className="ref-cat-card-arrow" style={{ color: cat.accent, background: 'rgba(0,0,0,0.5)' }}>
                   <ArrowUpRight size={20} />
                 </span>
               </div>

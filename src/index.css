@@ -4925,3 +4925,48 @@ a.ref-footer-contact-value:hover { color: var(--brand-gold, #D4AF37); }
     justify-content: space-between;
   }
 }
+
+/* ══════════════════════════════════════════════════
+   CATEGORY CARDS ANIMATION & IMAGE OVERRIDES
+══════════════════════════════════════════════════ */
+.ref-cat-card {
+  background-size: cover;
+  background-position: center;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--glass-border);
+}
+
+/* Base state for background zooming */
+.ref-cat-card {
+  /* We use a pseudo element for zooming the background image if we want,
+     but since background-image is inline, we can just scale the background size 
+     Wait, scaling background-size is jittery. 
+     Instead, we can just transform the card itself or rely on the overlay.
+     Actually, let's just make the card slightly pop up and the overlay get darker.
+  */
+}
+
+.ref-cat-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 100%);
+  z-index: 1;
+  transition: background 0.4s ease;
+}
+
+.ref-cat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  border-color: var(--brand-gold, #D4AF37);
+  z-index: 5;
+}
+
+.ref-cat-card:hover .ref-cat-card-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.ref-cat-card-content h3 {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
