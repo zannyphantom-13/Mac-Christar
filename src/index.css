@@ -6712,3 +6712,75 @@ body > * { position: relative; z-index: 1; }
   .ambient-orb { filter: blur(80px); }
   .mc2-hero-secondary-img { display: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOTION GRAPHICS Z-INDEX FIX — must come last to override legacy rules
+══════════════════════════════════════════════════════════════════════════ */
+
+/* Force the ambient background to always sit behind everything */
+.ambient-background {
+  z-index: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Force all direct children of body/root to sit above background */
+#root {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+/* Navbar always on top */
+.mc2-header {
+  z-index: 9000 !important;
+}
+
+/* Search / drawer overlays */
+.mc2-search-overlay,
+.mc2-drawer,
+.mc2-drawer-backdrop {
+  z-index: 18000 !important;
+}
+
+/* Hero section: transparent bg so animation bleeds through */
+.mc2-hero {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ref-main: transparent so background shows through */
+.ref-main {
+  background: transparent !important;
+}
+
+/* All other page containers: semi-transparent so background peeks through */
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Make glassmorphism cards work against the animated backdrop */
+.ref-process-step,
+.ref-brands-bar,
+.ref-cat-card,
+.cart-item-card,
+.cart-summary,
+.ref-product-card,
+.mc2-navbar,
+.mc2-nav-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Light mode: softer background blend */
+[data-theme='light'] .mc2-hero {
+  background: transparent !important;
+}
+
+[data-theme='light'] #root {
+  background: transparent;
+}
