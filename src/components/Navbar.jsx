@@ -124,7 +124,7 @@ export default function Navbar() {
             </button>
 
             {/* Wishlist */}
-            <Link to="/wishlist" className="mc-icon-btn" aria-label="Wishlist">
+            <Link to="/wishlist" className="mc-icon-btn mc-wishlist-btn" aria-label="Wishlist">
               <Heart size={20} />
               {wishlist.length > 0 && <span className="mc-badge">{wishlist.length}</span>}
             </Link>

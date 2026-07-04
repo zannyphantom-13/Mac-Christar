@@ -5022,3 +5022,35 @@ a.ref-footer-contact-value:hover { color: var(--brand-gold, #D4AF37); }
     max-width: 80%;
   }
 }
+
+/* ══════════════════════════════════════════════════
+   NAVBAR MOBILE RESPONSIVENESS FIXES
+══════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* Prevent horizontal overflow on ultra-small screens like iPhone SE (320px) */
+  .mc-navbar {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+  
+  .mc-logo-emblem {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mc-icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Hide Admin and Wishlist icons from main bar to save space on mobile, 
+     as they are already accessible inside the Hamburger Menu drawer */
+  .mc-admin-btn, .mc-wishlist-btn {
+    display: none !important;
+  }
+  
+  .mc-cart-pill {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+}
