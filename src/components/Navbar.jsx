@@ -129,11 +129,6 @@ export default function Navbar() {
               {wishlist.length > 0 && <span className="mc-badge">{wishlist.length}</span>}
             </Link>
 
-            {/* Account */}
-            <Link to={user ? '/profile' : '/login'} className="mc-icon-btn" aria-label="Account">
-              <User size={20} />
-            </Link>
-
             {/* Admin */}
             {user?.isAdmin && (
               <Link to="/admin" className="mc-icon-btn mc-admin-btn" aria-label="Admin">
@@ -201,11 +196,8 @@ export default function Navbar() {
               ))}
             </nav>
 
-            <div className="mc-drawer-section-label">Account</div>
+            <div className="mc-drawer-section-label">Shopping</div>
             <nav className="mc-drawer-nav">
-              <Link to={user ? '/profile' : '/login'} className="mc-drawer-link" onClick={() => setDrawerOpen(false)}>
-                <User size={16} /> {user ? `Hello, ${user.firstName}` : 'Sign In'}
-              </Link>
               <Link to="/wishlist" className="mc-drawer-link" onClick={() => setDrawerOpen(false)}>
                 <Heart size={16} /> Saved Items ({wishlist.length})
               </Link>

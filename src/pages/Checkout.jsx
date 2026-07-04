@@ -38,6 +38,7 @@ export default function Checkout() {
 
   const [formData, setFormData] = useState({ 
     fullName: user?.firstName ? `${user.firstName} ${user.lastName || ''}` : '', 
+    email: user?.email || '',
     phone: user?.phone || '', 
     address: '', 
     city: '', 
@@ -62,15 +63,12 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!authLoading) {
-      if (!user) {
-        showToast('Please log in to proceed to checkout.', 'error');
-        navigate('/login?redirect=/checkout');
-      } else if (cart.length === 0 && !placed) {
+      if (cart.length === 0 && !placed) {
         navigate('/cart');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, authLoading, cart, navigate, placed]);
+  }, [authLoading, cart, navigate, placed]);
 
   const handleReceiptChange = (e) => {
     const file = e.target.files?.[0];
@@ -109,7 +107,7 @@ export default function Checkout() {
         userId: user?.uid || 'guest',
         customerName: formData.fullName,
         customerPhone: formData.phone,
-        customerEmail: user?.email || '',
+        customerEmail: formData.email,
         deliveryAddress: `${formData.address}, ${formData.city}, ${formData.state}`,
         items: cart,
         total: grandTotal,
@@ -194,14 +192,14 @@ export default function Checkout() {
               {step === 0 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}><MapPin size={20} color="var(--primary)" /> Delivery Details</h3>
-                  {[['Full Name', 'fullName', 'text', 'e.g., Hassan Doe'], ['Phone', 'phone', 'tel', 'e.g., +234 800 000 0000'], ['Address', 'address', 'text', 'e.g., 5 Electronics Way, Ikeja'], ['City', 'city', 'text', 'e.g., Lagos']].map(([label, key, type, placeholder]) => (
+                  {[['Full Name', 'fullName', 'text', 'e.g., Hassan Doe'], ['Email', 'email', 'email', 'e.g., mail@example.com'], ['Phone', 'phone', 'tel', 'e.g., +234 800 000 0000'], ['Address', 'address', 'text', 'e.g., 5 Electronics Way, Ikeja'], ['City', 'city', 'text', 'e.g., Lagos']].map(([label, key, type, placeholder]) => (
                     <div key={key}>
                       <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--gray-1)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>{label}</label>
                       <input type={type} placeholder={placeholder} value={formData[key]} onChange={e => setFormData(p => ({ ...p, [key]: e.target.value }))} style={inputStyle} onFocus={e => e.target.style.borderColor='var(--primary)'} onBlur={e => e.target.style.borderColor='var(--dark-border)'} required />
                     </div>
                   ))}
                   <button onClick={() => {
-                    if (!formData.fullName || !formData.phone || !formData.address || !formData.city) {
+                    if (!formData.fullName || !formData.email || !formData.phone || !formData.address || !formData.city) {
                       setError('Please fill in all delivery details.');
                       return;
                     }

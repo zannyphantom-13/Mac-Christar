@@ -21,11 +21,11 @@ export default function SEO({
   const resolvedTitle = title ? `${title} | ${siteName}` : defaultTitle;
   const resolvedDesc = description || defaultDesc;
   const resolvedUrl = url
-    ? `https://the-electric-plug.onrender.com${url}`
-    : 'https://the-electric-plug.onrender.com/';
+    ? `https://macchristar.ng${url}`
+    : 'https://macchristar.ng/';
   const resolvedImage = image?.startsWith('http')
     ? image
-    : `https://the-electric-plug.onrender.com${image}`;
+    : `https://macchristar.ng${image}`;
 
   // Build Product structured data if a product object is passed
   const productSchema = product

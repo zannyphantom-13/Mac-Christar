@@ -180,7 +180,11 @@ export default function Shop() {
 
       <div className="shop-layout">
         {/* Mobile overlay */}
-        {isMobileFilterOpen && <div className="mobile-filter-backdrop" onClick={() => setIsMobileFilterOpen(false)} />}
+        <div
+          className="mobile-filter-backdrop"
+          style={{ display: isMobileFilterOpen ? 'block' : 'none' }}
+          onClick={() => setIsMobileFilterOpen(false)}
+        />
 
         <aside className={`shop-sidebar ${isMobileFilterOpen ? 'open' : ''}`}>
           <div className="mobile-filter-header">
@@ -324,7 +328,7 @@ export default function Shop() {
         </aside>
 
         {/* ── Main Product Area ──────────────────────────── */}
-        <section className="shop-main">
+        <section className="shop-main" style={{ minWidth: 0 }}>
           <div className="shop-toolbar">
             <div className="shop-results-count">
               Showing <span>{filteredProducts.length}</span> of <span>{products.length}</span> products
