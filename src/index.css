@@ -4,7 +4,7 @@
    Font: Space Grotesk (Display) + Plus Jakarta Sans (Body)
    ============================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ─── CSS CUSTOM PROPERTIES ─────────────────── */
 :root {
@@ -14,11 +14,11 @@
   --brand-gold:     #D4AF37;
   --brand-gold-hover:#B8962B;
   --dark-bg:        #1A1A1A;
-  --page-bg:        #F0F2F5;   /* cool gray page background */
-  --card-bg:        #FFFFFF;
-  --text-main:      #2C3338;
-  --text-muted:     #6C757D;
-  --border-color:   #E2E5E9;
+  --page-bg: #0A0A0A;   /* cool gray page background */
+  --card-bg: rgba(255,255,255,0.03);
+  --text-main: #FFFFFF;
+  --text-muted: rgba(255,255,255,0.6);
+  --border-color: rgba(255,255,255,0.1);
 
   /* Keep legacy aliases active for Admin / Checkout / Cart pages */
   --red:         #B30000;
@@ -48,8 +48,8 @@
   --info:        #1A4DA0;
 
   /* GLASS LAYERS */
-  --glass-bg:       rgba(255,255,255,0.85);
-  --glass-border:   rgba(255,255,255,0.95);
+  --glass-bg: rgba(20, 20, 20, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow:   0 4px 20px rgba(44, 51, 56, 0.10);
   --glass-blur:     blur(12px);
 
@@ -76,8 +76,8 @@
   --t-slow:   0.5s var(--ease);
 
   /* TYPOGRAPHY */
-  --font-display: 'Space Grotesk', 'Segoe UI', Roboto, sans-serif;
-  --font-main:    'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', 'Segoe UI', Roboto, sans-serif;
+  --font-main:    'Inter', 'Segoe UI', Roboto, sans-serif;
 
   /* BACKWARD-COMPAT ALIASES for admin/checkout/cart/profile */
   --primary:       #B30000;
@@ -139,7 +139,7 @@
 
 body {
   background-color: var(--page-bg);
-  color: var(--text-main);
+  color: #FFFFFF;
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -3443,7 +3443,11 @@ a { text-decoration: none; color: inherit; }
 
 /* ── MAIN HEADER ──────────────────────────────────────────────── */
 .mc-header {
-  background: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   position: sticky;
   top: 0;
   z-index: 900;
@@ -3481,10 +3485,11 @@ a { text-decoration: none; color: inherit; }
 .mc-search-bar {
   flex-grow: 1;
   display: flex;
-  border: 1.5px solid var(--border-color, #E2E5E9);
+  border: 1px solid var(--glass-border);
   border-radius: 6px;
   overflow: hidden;
-  background: var(--page-bg, #F0F2F5);
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: var(--glass-blur);
   transition: border-color 0.2s;
 }
 
@@ -3500,10 +3505,10 @@ a { text-decoration: none; color: inherit; }
   outline: none;
   font-size: 14px;
   font-family: var(--font-main);
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
 }
 
-.mc-search-bar input::placeholder { color: var(--text-muted, #6C757D); }
+.mc-search-bar input::placeholder { color: rgba(255,255,255,0.6); }
 
 .mc-search-bar button {
   padding: 0 22px;
@@ -3534,7 +3539,7 @@ a { text-decoration: none; color: inherit; }
   gap: 3px;
   font-size: 11px;
   font-weight: 600;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   position: relative;
   padding: 6px 10px;
   border-radius: 6px;
@@ -3580,7 +3585,7 @@ a { text-decoration: none; color: inherit; }
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   transition: background 0.2s;
 }
 
@@ -3639,7 +3644,7 @@ a { text-decoration: none; color: inherit; }
   padding: 10px 14px;
   border: none;
   background: var(--page-bg, #F0F2F5);
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   font-size: 13px;
   outline: none;
 }
@@ -3664,7 +3669,11 @@ a { text-decoration: none; color: inherit; }
 
 /* Sidebar Category Menu */
 .ref-sidebar-menu {
-  background: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   border: 1px solid var(--border-color, #E2E5E9);
   border-radius: 8px;
   list-style: none;
@@ -3684,7 +3693,7 @@ a { text-decoration: none; color: inherit; }
   padding: 11px 18px;
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   border-left: 3px solid transparent;
   transition: all 0.2s;
 }
@@ -3695,7 +3704,7 @@ a { text-decoration: none; color: inherit; }
   color: var(--brand-red, #B30000);
 }
 
-.ref-sidebar-icon { color: var(--text-muted, #6C757D); display: flex; flex-shrink: 0; }
+.ref-sidebar-icon { color: rgba(255,255,255,0.6); display: flex; flex-shrink: 0; }
 .ref-sidebar-link:hover .ref-sidebar-icon { color: var(--brand-red, #B30000); }
 .ref-sidebar-arrow { margin-left: auto; opacity: 0; transition: opacity 0.2s; }
 .ref-sidebar-link:hover .ref-sidebar-arrow { opacity: 1; }
@@ -3826,7 +3835,11 @@ a { text-decoration: none; color: inherit; }
 
 /* ── BRANDS BAR ───────────────────────────────────────────────── */
 .ref-brands-bar {
-  background: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   padding: 22px 32px;
   margin: 28px 0;
   display: flex;
@@ -3861,7 +3874,7 @@ a { text-decoration: none; color: inherit; }
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   margin-bottom: 28px;
   display: flex;
   align-items: center;
@@ -3915,7 +3928,11 @@ a { text-decoration: none; color: inherit; }
 
 /* ── PROCESS / HOW IT WORKS ───────────────────────────────────── */
 .ref-process-section {
-  background: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   padding: 50px 48px;
   margin: 0 0 40px;
   border-radius: 8px;
@@ -3963,12 +3980,12 @@ a { text-decoration: none; color: inherit; }
   font-size: 17px;
   font-weight: 700;
   margin-bottom: 10px;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
 }
 
 .ref-process-step p {
   font-size: 13.5px;
-  color: var(--text-muted, #6C757D);
+  color: rgba(255,255,255,0.6);
   line-height: 1.6;
 }
 
@@ -4031,7 +4048,11 @@ a { text-decoration: none; color: inherit; }
 
 /* ── PRODUCT CARD (reference style) ──────────────────────────── */
 .ref-product-card {
-  background: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   border-radius: 8px;
   border: 1px solid var(--border-color, #E2E5E9);
   overflow: hidden;
@@ -4097,7 +4118,7 @@ a { text-decoration: none; color: inherit; }
 
 .ref-product-img {
   height: 220px;
-  background: #fafafa;
+  background: rgba(0,0,0,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4125,7 +4146,7 @@ a { text-decoration: none; color: inherit; }
 
 .ref-product-category {
   font-size: 11px;
-  color: var(--text-muted, #6C757D);
+  color: rgba(255,255,255,0.6);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   margin-bottom: 6px;
@@ -4134,7 +4155,7 @@ a { text-decoration: none; color: inherit; }
 .ref-product-title {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   margin-bottom: 8px;
   line-height: 1.4;
   display: -webkit-box;
@@ -4153,7 +4174,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .ref-stars { color: var(--brand-gold, #D4AF37); font-size: 13px; }
-.ref-rating-count { font-size: 12px; color: var(--text-muted, #6C757D); }
+.ref-rating-count { font-size: 12px; color: rgba(255,255,255,0.6); }
 
 .ref-price-section {
   margin-top: auto;
@@ -4171,12 +4192,12 @@ a { text-decoration: none; color: inherit; }
 .ref-price-full {
   font-size: 20px;
   font-weight: 800;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
 }
 
 .ref-old-price {
   font-size: 13px;
-  color: var(--text-muted, #6C757D);
+  color: rgba(255,255,255,0.6);
   text-decoration: line-through;
 }
 
@@ -4189,7 +4210,7 @@ a { text-decoration: none; color: inherit; }
   border-radius: 4px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-muted, #6C757D);
+  color: rgba(255,255,255,0.6);
 }
 
 [data-theme='dark'] .ref-price-installment { background: #2a2a2a; }
@@ -4202,7 +4223,7 @@ a { text-decoration: none; color: inherit; }
   background: transparent;
   border: none;
   border-top: 1px solid var(--border-color, #E2E5E9);
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   font-family: var(--font-main);
   font-size: 13px;
   font-weight: 600;
@@ -4256,7 +4277,7 @@ a { text-decoration: none; color: inherit; }
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.10);
   transition: all 0.2s;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
 }
 
 .ref-slider-btn:hover { background: var(--brand-red, #B30000); color: #fff; border-color: var(--brand-red); }
@@ -4325,11 +4346,11 @@ a { text-decoration: none; color: inherit; }
 .ref-trust-label {
   font-size: 14px;
   font-weight: 700;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   margin-bottom: 3px;
 }
 
-.ref-trust-sub { font-size: 12px; color: var(--text-muted, #6C757D); }
+.ref-trust-sub { font-size: 12px; color: rgba(255,255,255,0.6); }
 
 /* ── NEWSLETTER ───────────────────────────────────────────────── */
 .ref-newsletter-section { margin-bottom: 20px; }
@@ -4378,7 +4399,7 @@ a { text-decoration: none; color: inherit; }
   padding: 14px 18px;
   border: none;
   background: #fff;
-  color: var(--text-main, #2C3338);
+  color: #FFFFFF;
   font-family: var(--font-main);
   font-size: 14px;
   outline: none;
@@ -4642,4 +4663,76 @@ a.ref-footer-contact-value:hover { color: var(--brand-gold, #D4AF37); }
   .ref-cat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .ref-product-card { width: 200px; }
   .ref-section-title { font-size: 18px; }
+}
+
+/* =============================================
+   PREMIUM AMBIENT BACKGROUND
+   ============================================= */
+.ambient-background {
+  position: fixed;
+  inset: 0;
+  z-index: -999;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--page-bg);
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, var(--brand-red) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, var(--brand-gold) 0%, transparent 70%);
+  bottom: -20%;
+  right: -10%;
+  animation-delay: -5s;
+}
+
+.orb-3 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, var(--brand-red-hover) 0%, transparent 70%);
+  top: 40%;
+  left: 30%;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5%, 5%) scale(1.05); }
+  66% { transform: translate(-5%, 2%) scale(0.95); }
+}
+
+.ambient-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+.ambient-noise {
+  position: absolute;
+  inset: 0;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+  opacity: 0.03;
+  mix-blend-mode: overlay;
 }
