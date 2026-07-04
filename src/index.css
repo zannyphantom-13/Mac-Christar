@@ -6784,3 +6784,78 @@ body > * { position: relative; z-index: 1; }
 [data-theme='light'] #root {
   background: transparent;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GLOBAL TRANSPARENCY OVERRIDES — makes motion graphics visible site-wide
+══════════════════════════════════════════════════════════════════════════ */
+
+/* Body: transparent so animated canvas shows through */
+body {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+html {
+  background: #07070f; /* fallback colour in case of delay */
+}
+
+/* root wrapper */
+#root {
+  background: transparent !important;
+  min-height: 100vh;
+}
+
+/* ref-main: transparent so background bleeds through every page */
+.ref-main {
+  background: transparent !important;
+  min-height: 100vh;
+}
+
+/* ref-container: transparent */
+.ref-container {
+  background: transparent !important;
+}
+
+/* Section separators — use subtle glass panels, not solid fills */
+.ref-process-section {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px;
+}
+
+.ref-trust-strip {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px;
+}
+
+/* Footer: glassmorphism */
+.mc-footer {
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border-top: 1px solid var(--glass-border) !important;
+}
+
+/* Cart, Checkout, Shop, inner page background panels */
+.main-content {
+  background: transparent !important;
+}
+
+/* Light mode global transparency */
+[data-theme='light'] body {
+  background: transparent !important;
+}
+
+[data-theme='light'] html {
+  background: #f8f0ff;
+}
+
+[data-theme='light'] .mc-footer {
+  background: rgba(255,255,255,0.65) !important;
+  border-top: 1px solid rgba(0,0,0,0.08) !important;
+}
