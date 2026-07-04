@@ -77,7 +77,7 @@ export default function Cart() {
             </div>
 
             {/* Order Summary */}
-            <div style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-lg)', padding: '24px', position: 'sticky', top: '90px' }}>
+            <div className="cart-summary" style={{ background: 'var(--glass-bg)', backdropFilter: 'var(--glass-blur)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-lg)', padding: '24px' }}>
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid var(--dark-border)' }}>Order Summary</h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>

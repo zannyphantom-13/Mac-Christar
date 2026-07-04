@@ -5123,3 +5123,121 @@ a.ref-footer-contact-value:hover { color: var(--brand-gold, #D4AF37); }
   .ref-bento-small-text h3 { font-size: 18px; line-height: 1.2; }
   .ref-bento-small p { font-size: 13px; max-width: 60%; }
 }
+
+/* ══════════════════════════════════════════════════
+   COMPREHENSIVE INNER PAGES MOBILE AUDIT FIXES
+   Overrides conflicting media query rules 
+══════════════════════════════════════════════════ */
+
+/* ── Product Details ─────────────────────────── */
+@media (max-width: 1024px) {
+  .product-detail-layout { grid-template-columns: 1fr 1fr; }
+  .product-detail-layout .product-action-sidebar { grid-column: 1 / -1; position: static; }
+}
+
+@media (max-width: 768px) {
+  .product-detail-layout { 
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  .product-detail-layout .product-action-sidebar { 
+    grid-column: 1 / -1;
+    position: static !important;
+  }
+  .product-gallery { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .pg-main { width: 100%; aspect-ratio: 1; }
+  .pg-thumb-list { flex-direction: row; overflow-x: auto; }
+}
+
+/* ── Cart ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .cart-grid { 
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  .cart-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+  .cart-item-card .item-thumb {
+    width: 100%;
+    height: 160px;
+    border-radius: 8px;
+  }
+  .cart-item-card .item-thumb img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+  }
+  .cart-item-card .item-details {
+    width: 100%;
+  }
+  .cart-item-card .item-name {
+    white-space: normal;
+    font-size: 15px;
+  }
+  .cart-item-card .item-price-col {
+    text-align: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cart-row-actions {
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+}
+
+/* ── Checkout ─────────────────────────────────── */
+@media (max-width: 768px) {
+  .checkout-layout,
+  .cart-grid[style*="1fr 360px"] {
+    grid-template-columns: 1fr !important;
+  }
+  .checkout-form-container,
+  .order-summary {
+    position: static !important;
+  }
+}
+
+/* ── Shop Sidebar ─────────────────────────────── */
+@media (max-width: 768px) {
+  .shop-layout {
+    grid-template-columns: 1fr !important;
+    gap: 0;
+  }
+  .shop-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 85% !important;
+    max-width: 320px !important;
+    height: 100vh !important;
+    z-index: 10000 !important;
+    border-radius: 0 12px 12px 0 !important;
+    transition: left 0.35s ease !important;
+    overflow-y: auto;
+  }
+  .shop-sidebar.open {
+    left: 0 !important;
+  }
+}
+
+/* ── Cart Order Summary sticky override ──────── */
+@media (max-width: 768px) {
+  div[style*="position: sticky"] {
+    position: static !important;
+  }
+}
+
+/* ── Cart Summary sticky: desktop only ───────── */
+@media (min-width: 769px) {
+  .cart-summary {
+    position: sticky;
+    top: 90px;
+  }
+}
