@@ -1,80 +1,94 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { allProducts, productData } from '../data/productData';
 import {
   Smartphone, Laptop, Tv, Headphones, Refrigerator, Gamepad2, Camera, Watch,
   ShoppingCart, Heart, Truck, ShieldCheck, Mail, Zap,
-  ChevronLeft, ChevronRight, Calendar, ArrowRight, ArrowUpRight
+  ChevronLeft, ChevronRight, ArrowRight, ArrowUpRight,
+  ShoppingBag, Wallet, CreditCard, Package, Power, Blend
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import SEO from '../components/SEO';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { useTilt, useMagnetic } from '../hooks/useInteraction';
 
 export const formatCurrency = (amount) => '₦' + (amount || 0).toLocaleString('en-NG');
 
 /* ─────────────────────────────────────────────
-   PRODUCT CARD
+   PRODUCT CARD  (reference style)
 ───────────────────────────────────────────── */
 export const ProductCard = ({ product }) => {
   const { addToCart, toggleWishlist, isInWishlist } = useApp();
   const inWishlist = isInWishlist(product.id);
-  const tiltRef = useTilt();
-
-  let badge = null;
-  if (product.badge === 'hot') badge = <span className="product-badge hot">HOT</span>;
-  else if (product.badge === 'new') badge = <span className="product-badge new">NEW</span>;
-  else if (product.badge === 'sale' || product.originalPrice) badge = <span className="product-badge">SALE</span>;
 
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
 
+  // Monthly installment estimate (12 months)
+  const monthlyInstallment = Math.ceil(product.price / 12);
+
   return (
-    <article className="product-card" tabIndex="0" ref={tiltRef}>
+    <article className="ref-product-card" tabIndex="0">
+      {/* Badges */}
+      <div className="ref-product-badges">
+        {product.badge === 'hot' && <span className="ref-badge ref-badge-red">Hot Deal</span>}
+        {(product.badge === 'new') && <span className="ref-badge ref-badge-gold">New</span>}
+        {discount > 0 && <span className="ref-badge ref-badge-red">Save {discount}%</span>}
+        {product.bnpl && <span className="ref-badge ref-badge-gold">BNPL</span>}
+      </div>
+
+      {/* Wishlist */}
+      <button
+        className={`ref-wishlist-btn ${inWishlist ? 'active' : ''}`}
+        aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+        onClick={e => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product); }}
+      >
+        <Heart size={16} fill={inWishlist ? '#B30000' : 'none'} color={inWishlist ? '#B30000' : '#999'} />
+      </button>
+
       <Link to={`/product/${product.id}`} style={{ display: 'contents' }}>
-        <div className="product-img-wrap">
-          {badge}
-          <button
-            className={`product-wishlist ${inWishlist ? 'active' : ''}`}
-            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-            onClick={e => { e.preventDefault(); toggleWishlist(product); }}
-          >
-            <Heart size={15} fill={inWishlist ? '#C0202A' : 'none'} color={inWishlist ? '#C0202A' : '#9A8E7A'} />
-          </button>
+        {/* Product Image */}
+        <div className="ref-product-img">
           <img
             src={product.imgUrl || product.image || (product.images && product.images[0]) || '/placeholder.jpg'}
             alt={product.name}
-            className="product-img"
             onError={e => { e.target.style.display = 'none'; }}
           />
-          <div className="product-actions">
-            <button
-              style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:'8px',background:'transparent',font:'inherit',fontWeight:700,width:'100%',height:'100%',cursor:'pointer',color:'#fff',fontSize:'13px' }}
-              onClick={e => { e.preventDefault(); addToCart(product); }}
-            >
-              <ShoppingCart size={15} /> Add to Cart
-            </button>
-          </div>
         </div>
-        <div className="product-info">
-          <div className="product-brand">{product.brand || 'Mac-Christar'}</div>
-          <h3 className="product-name" title={product.name}>{product.name}</h3>
-          <div className="product-rating">
-            <span className="stars">
-              {'★'.repeat(Math.max(0,Math.min(5,Math.floor(Number(product.rating)||4))))}
-              {'☆'.repeat(Math.max(0,5-Math.min(5,Math.floor(Number(product.rating)||4))))}
-            </span>
-            <span className="rating-count">({Number(product.reviews)||0})</span>
+
+        {/* Product Info */}
+        <div className="ref-product-info">
+          <div className="ref-product-category">{product.category || product.department || 'Electronics'}</div>
+          <h3 className="ref-product-title">{product.name}</h3>
+
+          {/* Star Rating */}
+          <div className="ref-product-rating">
+            <span className="ref-stars">{'★'.repeat(Math.min(5, Math.floor(Number(product.rating) || 4)))}{'☆'.repeat(Math.max(0, 5 - Math.floor(Number(product.rating) || 4)))}</span>
+            <span className="ref-rating-count">({Number(product.reviews) || 0})</span>
           </div>
-          <div className="product-price-wrap">
-            {product.originalPrice && <span className="product-old-price">{formatCurrency(product.originalPrice)}</span>}
-            <span className="product-price">{formatCurrency(product.price)}</span>
-            {discount > 0 && <span className="product-discount">-{discount}%</span>}
+
+          {/* Price */}
+          <div className="ref-price-section">
+            <div className="ref-price-row">
+              {product.originalPrice && <span className="ref-old-price">{formatCurrency(product.originalPrice)}</span>}
+              <span className="ref-price-full">{formatCurrency(product.price)}</span>
+            </div>
+            <div className="ref-price-installment">
+              Save to Buy Plan: <span>from {formatCurrency(monthlyInstallment)}/mo</span>
+            </div>
           </div>
         </div>
       </Link>
+
+      {/* Add to Cart */}
+      <button
+        className="ref-add-to-cart-btn"
+        onClick={e => { e.stopPropagation(); addToCart(product); }}
+        aria-label={`Add ${product.name} to cart`}
+      >
+        <ShoppingCart size={16} /> Add to Cart
+      </button>
     </article>
   );
 };
@@ -82,81 +96,19 @@ export const ProductCard = ({ product }) => {
 /* ─────────────────────────────────────────────
    SCROLLABLE PRODUCT SLIDER
 ───────────────────────────────────────────── */
-const ScrollableProductSlider = ({ products }) => {
+const ProductRow = ({ products }) => {
   const scrollRef = useRef(null);
   const scroll = (dir) => {
-    if (scrollRef.current) scrollRef.current.scrollBy({ left: dir === 'left' ? -420 : 420, behavior: 'smooth' });
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: dir === 'left' ? -460 : 460, behavior: 'smooth' });
   };
   return (
-    <div className="slider-container">
-      <button className="slider-btn left" onClick={() => scroll('left')} aria-label="Scroll left"><ChevronLeft size={18} /></button>
-      <div className="scrollable-2row" ref={scrollRef}>
+    <div className="ref-product-slider">
+      <button className="ref-slider-btn ref-slider-left" onClick={() => scroll('left')} aria-label="Scroll left"><ChevronLeft size={18} /></button>
+      <div className="ref-product-scroll" ref={scrollRef}>
         {products?.map(p => <ProductCard key={p.id} product={p} />)}
       </div>
-      <button className="slider-btn right" onClick={() => scroll('right')} aria-label="Scroll right"><ChevronRight size={18} /></button>
+      <button className="ref-slider-btn ref-slider-right" onClick={() => scroll('right')} aria-label="Scroll right"><ChevronRight size={18} /></button>
     </div>
-  );
-};
-
-/* ─────────────────────────────────────────────
-   SCROLL REVEAL HOOK
-───────────────────────────────────────────── */
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal');
-    if (!els.length) return;
-    const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }),
-      { threshold: 0.08 }
-    );
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
-  });
-}
-
-/* ─────────────────────────────────────────────
-   CATEGORY BILLBOARD COMPONENT
-───────────────────────────────────────────── */
-const CategoryBillboard = ({ cat }) => {
-  const tiltRef = useTilt();
-  
-  return (
-    <Link
-      to={`/shop?q=${cat.q}`}
-      className="mc-cat-billboard"
-      style={{ 
-        '--cat-bg': cat.bg, 
-        '--cat-text': cat.text,
-        '--cat-shadow': cat.shadow
-      }}
-      ref={tiltRef}
-    >
-      <div className="mc-cat-icon-bg">{cat.icon}</div>
-      <div className="mc-cat-content">
-        <div className="mc-cat-icon">{cat.icon}</div>
-        <div className="mc-cat-name">{cat.name}</div>
-        <div className="mc-cat-cta">Shop <ArrowRight size={12}/></div>
-      </div>
-    </Link>
-  );
-};
-
-/* ─────────────────────────────────────────────
-   BRAND CARD COMPONENT
-───────────────────────────────────────────── */
-const BrandCard = ({ to, className, eyebrow, title, sub, cta, icon }) => {
-  const tiltRef = useTilt();
-  return (
-    <Link to={to} className={`mc-brand-card ${className}`} ref={tiltRef}>
-      <div className="mc-brand-bg"></div>
-      <div className="mc-brand-content">
-        <div className="mc-brand-eyebrow">{eyebrow}</div>
-        <h3 className="mc-brand-title" dangerouslySetInnerHTML={{ __html: title }}></h3>
-        <p className="mc-brand-sub">{sub}</p>
-        <div className="mc-brand-cta">{cta} <ArrowRight size={14}/></div>
-      </div>
-      {icon}
-    </Link>
   );
 };
 
@@ -165,28 +117,30 @@ const BrandCard = ({ to, className, eyebrow, title, sub, cta, icon }) => {
 ───────────────────────────────────────────── */
 export default function Home() {
   const { showToast } = useApp();
-  const [data, setData] = useState({ flashSale:[], newArrivals:[], featured:[], all:[] });
+  const navigate = useNavigate();
+  const [data, setData] = useState({ flashSale: [], newArrivals: [], featured: [], all: [] });
   const [heroSlides, setHeroSlides] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [email, setEmail] = useState('');
   const timerRef = useRef(null);
-  
-  const magRef1 = useMagnetic();
-  const magRef2 = useMagnetic();
-
-  useScrollReveal();
 
   /* ── FETCH DATA ── */
   useEffect(() => {
-    getDoc(doc(db,'settings','site_settings'))
-      .then(snap => { if (snap.exists()&&snap.data().heroSlides) setHeroSlides(snap.data().heroSlides); })
-      .catch(()=>{});
+    getDoc(doc(db, 'settings', 'site_settings'))
+      .then(snap => { if (snap.exists() && snap.data().heroSlides) setHeroSlides(snap.data().heroSlides); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
-    import('../utils/productService').then(({getProducts})=>getProducts()).then(dbProducts => {
-      if (dbProducts?.length) setData({ flashSale:dbProducts.slice(0,8), newArrivals:dbProducts.slice(0,10), featured:dbProducts.slice(0,8), all:dbProducts });
-    }).catch(()=>{});
+    import('../utils/productService').then(({ getProducts }) => getProducts()).then(dbProducts => {
+      if (dbProducts?.length) setData({
+        flashSale: dbProducts.slice(0, 8),
+        newArrivals: dbProducts.slice(0, 8),
+        featured: dbProducts.slice(0, 4),
+        all: dbProducts
+      });
+    }).catch(() => {});
   }, []);
 
   /* ── HERO AUTO-ADVANCE ── */
@@ -199,49 +153,46 @@ export default function Home() {
 
   useEffect(() => {
     if (!heroSlides.length) return;
-    timerRef.current = setInterval(() => goToSlide((activeSlide+1) % heroSlides.length), 7000);
+    timerRef.current = setInterval(() => goToSlide((activeSlide + 1) % heroSlides.length), 7000);
     return () => clearInterval(timerRef.current);
   }, [heroSlides.length, activeSlide, goToSlide]);
 
   const slide = heroSlides[activeSlide] || {};
 
-  /* ── CATEGORY DATA ── */
-  const categories = [
-    { icon:<Smartphone size={38} strokeWidth={1.5}/>, name:'Smartphones', q:'smartphone', 
-      bg: 'linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%)', text: '#fff', shadow: 'rgba(255, 75, 43, 0.4)' },
-    { icon:<Laptop size={38} strokeWidth={1.5}/>, name:'Laptops', q:'laptop', 
-      bg: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', text: '#fff', shadow: 'rgba(0, 242, 254, 0.4)' },
-    { icon:<Tv size={38} strokeWidth={1.5}/>, name:'Televisions', q:'tv', 
-      bg: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', text: '#005522', shadow: 'rgba(56, 249, 215, 0.4)' },
-    { icon:<Headphones size={38} strokeWidth={1.5}/>, name:'Headphones', q:'headphone', 
-      bg: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', text: '#882244', shadow: 'rgba(254, 225, 64, 0.4)' },
-    { icon:<Refrigerator size={38} strokeWidth={1.5}/>, name:'Appliances', q:'appliance', 
-      bg: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', text: '#884400', shadow: 'rgba(253, 160, 133, 0.4)' },
-    { icon:<Gamepad2 size={38} strokeWidth={1.5}/>, name:'Gaming', q:'gaming', 
-      bg: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', text: '#fff', shadow: 'rgba(118, 75, 162, 0.4)' },
-    { icon:<Camera size={38} strokeWidth={1.5}/>, name:'Cameras', q:'camera', 
-      bg: 'linear-gradient(135deg, #13547a 0%, #80d0c7 100%)', text: '#fff', shadow: 'rgba(128, 208, 199, 0.4)' },
-    { icon:<Watch size={38} strokeWidth={1.5}/>, name:'Watches', q:'watch', 
-      bg: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)', text: '#fff', shadow: 'rgba(36, 59, 85, 0.4)' },
+  /* ── STATIC DATA ── */
+  const sidebarCategories = [
+    { icon: <Tv size={18} />, label: 'Televisions & Audio', q: 'tv' },
+    { icon: <Smartphone size={18} />, label: 'Phones & Tablets', q: 'smartphone' },
+    { icon: <Laptop size={18} />, label: 'Laptops & Computers', q: 'laptop' },
+    { icon: <Refrigerator size={18} />, label: 'Refrigerators & Freezers', q: 'fridge' },
+    { icon: <Zap size={18} />, label: 'Generators & Power', q: 'generator' },
+    { icon: <Headphones size={18} />, label: 'Audio & Headphones', q: 'headphone' },
+    { icon: <Gamepad2 size={18} />, label: 'Gaming Consoles', q: 'gaming' },
+    { icon: <Camera size={18} />, label: 'Cameras', q: 'camera' },
   ];
 
-  const promoTiles = [
-    { num:'01', icon:<Smartphone size={22}/>, label:'New Arrivals', sub:'Phones & Tablets', to:'/shop?sort=new', bg:'#A00000' },
-    { num:'02', icon:<Calendar size={22}/>, label:'Flexible Plans', sub:'Daily, Weekly, Monthly', to:'/shop', bg:'#1A1208' },
-    { num:'03', icon:<Zap size={22}/>, label:'Flash Deals', sub:"Today's Best Prices", to:'/shop', bg:'#C9A84C' },
+  const brands = ['SAMSUNG', 'APPLE', 'LG', 'HP', 'SONY', 'HISENSE', 'NEXUS', 'ITEL'];
+
+  const processSteps = [
+    { icon: <ShoppingBag size={36} />, title: '1. Select Product', desc: 'Browse our full catalog and choose your desired electronics.' },
+    { icon: <Wallet size={36} />, title: '2. Choose Payment Plan', desc: 'Select Daily, Weekly, Monthly installments or instant BNPL via Klump.' },
+    { icon: <CreditCard size={36} />, title: '3. Make Payments', desc: 'Track your progress directly from your personal dashboard.' },
+    { icon: <Truck size={36} />, title: '4. Fast Delivery', desc: 'Get your item immediately (BNPL) or on full completion (installments).' },
   ];
 
-  const dynamicSections = [
-    ['Mac-Christar Exclusives','Best Deals',0],
-    ['Phones & Tablets','Top Picks',1],
-    ['Home Appliances','Best Sellers',2],
-    ['Laptops & Computing','Offers',3],
-    ['Premium TVs & Audio','Explore',4],
-    ['Gaming Consoles','Best Sellers',5],
+  const categoryCards = [
+    { label: 'Smart TVs', q: 'tv', gradient: 'linear-gradient(to bottom right, #1a1a2e, #16213e)', accent: '#4cc9f0' },
+    { label: 'Computing', q: 'laptop', gradient: 'linear-gradient(to bottom right, #0f3460, #533483)', accent: '#e94560' },
+    { label: 'Smartphones', q: 'smartphone', gradient: 'linear-gradient(to bottom right, #2d6a4f, #1b4332)', accent: '#52b788' },
+    { label: 'Power Solutions', q: 'generator', gradient: 'linear-gradient(to bottom right, #7b2d00, #bf360c)', accent: '#ffb703' },
+    { label: 'Home Appliances', q: 'appliance', gradient: 'linear-gradient(to bottom right, #1d3557, #457b9d)', accent: '#a8dadc' },
+    { label: 'Gaming', q: 'gaming', gradient: 'linear-gradient(to bottom right, #240046, #5a189a)', accent: '#c77dff' },
+    { label: 'Audio', q: 'headphone', gradient: 'linear-gradient(to bottom right, #2b2d42, #8d99ae)', accent: '#ef233c' },
+    { label: 'Cameras', q: 'camera', gradient: 'linear-gradient(to bottom right, #1b1b2f, #162447)', accent: '#e43f5a' },
   ];
 
   return (
-    <main id="main" style={{ background:'var(--bg)' }}>
+    <main id="main" className="ref-main">
       <SEO
         title="Mac-Christar Limited — Premium Electronics Nigeria"
         description="Buy the latest phones, laptops, TVs and home appliances at Mac-Christar Limited. Flexible installment plans, Buy Now Pay Later, fast nationwide delivery."
@@ -249,330 +200,223 @@ export default function Home() {
       />
 
       {/* ══════════════════════════════════════════
-          CINEMATIC HERO — Asymmetric Editorial
+          HERO SECTION — Sidebar + Banner
       ══════════════════════════════════════════ */}
-      {heroSlides.length > 0 && (
-        <section className="mc-hero" aria-label="Featured promotion">
+      <div className="ref-container">
+        <section className="ref-hero-section" aria-label="Hero">
 
-          {/* ── Background image layer ── */}
+          {/* Left Sidebar */}
+          <ul className="ref-sidebar-menu" aria-label="Browse categories">
+            {sidebarCategories.map(cat => (
+              <li key={cat.q}>
+                <Link to={`/shop?q=${cat.q}`} className="ref-sidebar-link">
+                  <span className="ref-sidebar-icon">{cat.icon}</span>
+                  {cat.label}
+                  <ArrowRight size={14} className="ref-sidebar-arrow" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* Hero Banner */}
           <div
-            className={`mc-hero-bg ${isTransitioning ? 'transitioning' : ''}`}
-            style={{ backgroundImage: slide.image ? `url(${slide.image})` : 'none' }}
-            aria-hidden="true"
-          />
-          {/* Gradient overlay — red sweep from left */}
-          <div className="mc-hero-overlay" aria-hidden="true" />
-
-          {/* ── Decorative backdrop number ── */}
-          <span className="mc-hero-backdrop-num" aria-hidden="true">
-            {String(activeSlide + 1).padStart(2, '0')}
-          </span>
-
-          {/* ── EDITORIAL TEXT BLOCK ── */}
-          <div className="mc-hero-inner">
-            <div className={`mc-hero-content ${isTransitioning ? 'exit' : 'enter'}`}>
-
-              {/* Eyebrow line */}
-              <div className="mc-hero-eyebrow">
-                <span className="mc-hero-line" />
-                <span className="mc-hero-eyebrow-text">Mac-Christar Limited</span>
-              </div>
-
-              {/* Giant display title — split */}
-              <h1 className="mc-hero-title">
-                {(slide.title || 'Premium Electronics').split(' ').map((word, i) => (
-                  <span key={i} className="mc-hero-word" style={{ animationDelay: `${i * 0.08}s` }}>
-                    {word}
-                  </span>
-                ))}
+            className="ref-hero-banner"
+            style={slide.image ? { backgroundImage: `url(${slide.image})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+          >
+            <div className="ref-hero-overlay" />
+            <div className="ref-hero-content">
+              <p className="ref-hero-eyebrow">Mac-Christar Limited</p>
+              <h1 className="ref-hero-h1">
+                {slide.title ? (
+                  <>{slide.title.split(' ').slice(0, 3).join(' ')}<br /><span>{slide.title.split(' ').slice(3).join(' ') || 'Pay On Your Terms'}</span></>
+                ) : (
+                  <>Upgrade Your Tech.<br /><span>Pay On Your Terms.</span></>
+                )}
               </h1>
-
-              {/* Subtitle */}
-              <p className="mc-hero-subtitle">{slide.subtitle || 'The best brands. Flexible payments. Delivered to your door.'}</p>
-
-              {/* CTA Row */}
-              <div className="mc-hero-ctas">
-                <div ref={magRef1}>
-                  <Link to={slide.link || '/shop'} className="mc-hero-cta-primary">
-                    <span>{slide.buttonText || 'Shop Now'}</span>
-                    <ArrowUpRight size={18} className="mc-cta-arrow" />
-                  </Link>
-                </div>
-                <div ref={magRef2}>
-                  <Link to="/shop" className="mc-hero-cta-ghost">
-                    Browse All <ArrowRight size={15} />
-                  </Link>
-                </div>
+              <p className="ref-hero-sub">
+                {slide.subtitle || 'Shop top-tier electronics today. Choose flexible daily, weekly, or monthly installments, or get instant approval with Buy Now, Pay Later.'}
+              </p>
+              <div className="ref-hero-ctas">
+                <Link to={slide.link || '/shop'} className="ref-btn ref-btn-gold">
+                  Shop Latest Deals <ArrowRight size={18} />
+                </Link>
+                <Link to="/shop" className="ref-btn ref-btn-outline">
+                  Browse All
+                </Link>
               </div>
-            </div>
-
-            {/* ── Slide counter + dots ── */}
-            {heroSlides.length > 1 && (
-              <div className="mc-hero-nav">
-                <div className="mc-hero-counter">
-                  <span className="mc-counter-current">{String(activeSlide+1).padStart(2,'0')}</span>
-                  <span className="mc-counter-sep" />
-                  <span className="mc-counter-total">{String(heroSlides.length).padStart(2,'0')}</span>
-                </div>
-                <div className="mc-hero-tracks">
-                  {heroSlides.map((_,i) => (
-                    <button
-                      key={i}
-                      className={`mc-hero-track ${i === activeSlide ? 'active' : ''}`}
-                      onClick={() => goToSlide(i)}
-                      aria-label={`Go to slide ${i+1}`}
-                    />
+              {/* Slide dots */}
+              {heroSlides.length > 1 && (
+                <div className="ref-hero-dots">
+                  {heroSlides.map((_, i) => (
+                    <button key={i} className={`ref-hero-dot ${i === activeSlide ? 'active' : ''}`} onClick={() => goToSlide(i)} aria-label={`Slide ${i + 1}`} />
                   ))}
                 </div>
-                <div className="mc-hero-arrows">
-                  <button onClick={() => goToSlide(activeSlide===0 ? heroSlides.length-1 : activeSlide-1)} aria-label="Previous">
-                    <ChevronLeft size={18}/>
-                  </button>
-                  <button onClick={() => goToSlide((activeSlide+1)%heroSlides.length)} aria-label="Next">
-                    <ChevronRight size={18}/>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* ── Scroll cue ── */}
-          <div className="mc-scroll-cue" aria-hidden="true">
-            <span className="mc-scroll-line"/>
-            <span className="mc-scroll-label">Scroll</span>
+              )}
+            </div>
           </div>
         </section>
-      )}
+      </div>
 
       {/* ══════════════════════════════════════════
-          HORIZONTAL PROMO STRIP
-          (Replaces the old sidebar tiles)
+          FEATURED BRANDS BAR
       ══════════════════════════════════════════ */}
-      <section className="mc-promo-strip" aria-label="Quick access">
-        {promoTiles.map((tile, i) => (
-          <Link
-            key={tile.num}
-            to={tile.to}
-            className="mc-promo-tile"
-            style={{ '--tile-bg': tile.bg, animationDelay: `${i * 0.12}s` }}
-          >
-            <div className="mc-promo-num">{tile.num}</div>
-            <div className="mc-promo-icon">{tile.icon}</div>
-            <div className="mc-promo-body">
-              <div className="mc-promo-label">{tile.label}</div>
-              <div className="mc-promo-sub">{tile.sub}</div>
-            </div>
-            <div className="mc-promo-arrow"><ArrowUpRight size={20}/></div>
-          </Link>
-        ))}
-      </section>
-
-      {/* ══════════════════════════════════════════
-          CATEGORY BILLBOARDS
-          (Large editorial grid, not small pills)
-      ══════════════════════════════════════════ */}
-      <section className="main-content section-gap" aria-label="Browse by category">
-        <div className="mc-cat-header reveal">
-          <div className="mc-section-kicker">Explore</div>
-          <h2 className="mc-section-display">Shop by Category</h2>
-          <Link to="/shop" className="mc-text-link">All categories <ArrowRight size={14}/></Link>
+      <div className="ref-container">
+        <div className="ref-brands-bar" aria-label="Featured brands">
+          {brands.map(b => (
+            <Link key={b} to={`/shop?brand=${b.toLowerCase()}`} className="ref-brand-logo">{b}</Link>
+          ))}
         </div>
-
-        <div className="mc-cat-billboard-grid reveal">
-          {categories.map((cat, i) => {
-            return (
-              <CategoryBillboard key={cat.name} cat={cat} />
-            );
-          })}
-        </div>
-      </section>
+      </div>
 
       {/* ══════════════════════════════════════════
-          TRUST ROW
+          HOW INSTALLMENTS WORK
       ══════════════════════════════════════════ */}
-      <section className="mc-trust-strip reveal" aria-label="Why shop with us">
-        {[
-          { icon:<ShoppingCart size={20} color="#A00000"/>, label:'Buy Now, Pay Later' },
-          { icon:<Calendar size={20} color="#C9A84C"/>, label:'Installment Plans' },
-          { icon:<ShieldCheck size={20} color="#1A7A4A"/>, label:'100% Genuine' },
-          { icon:<Truck size={20} color="#1A4DA0"/>, label:'Nationwide Delivery' },
-        ].map(item => (
-          <div key={item.label} className="mc-trust-chip">
-            {item.icon}
-            <span>{item.label}</span>
+      <div className="ref-container">
+        <section className="ref-process-section" aria-label="How it works">
+          <h2 className="ref-section-title ref-section-title-center">How Flexible Purchasing Works</h2>
+          <div className="ref-process-grid">
+            {processSteps.map(step => (
+              <div key={step.title} className="ref-process-step">
+                <div className="ref-process-icon">{step.icon}</div>
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </section>
+        </section>
+      </div>
 
       {/* ══════════════════════════════════════════
-          FLASH SALE
+          SHOP BY CATEGORY GRID
+      ══════════════════════════════════════════ */}
+      <div className="ref-container ref-section">
+        <h2 className="ref-section-title">Shop by Category</h2>
+        <div className="ref-cat-grid">
+          {categoryCards.map(cat => (
+            <Link
+              key={cat.q}
+              to={`/shop?q=${cat.q}`}
+              className="ref-cat-card"
+              style={{ background: cat.gradient }}
+              aria-label={`Browse ${cat.label}`}
+            >
+              <div className="ref-cat-card-content">
+                <h3>{cat.label}</h3>
+                <span className="ref-cat-card-arrow" style={{ color: cat.accent }}>
+                  <ArrowUpRight size={20} />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          FLASH SALES
       ══════════════════════════════════════════ */}
       {data.flashSale.length > 0 && (
-        <section className="main-content flash-sale section-gap reveal" aria-label="Flash sale">
-          <div className="flash-header">
-            <div className="flash-title-wrap">
-              <div className="flash-title"><Zap size={20} className="flash-icon"/> Flash Sale</div>
-            </div>
-            <div className="countdown" role="timer">
-              <span className="countdown-label">Ends in:</span>
-              <div className="time-unit"><span className="time-num">02</span><span className="time-label">HRS</span></div>
-              <span className="time-sep">:</span>
-              <div className="time-unit"><span className="time-num">14</span><span className="time-label">MIN</span></div>
-              <span className="time-sep">:</span>
-              <div className="time-unit"><span className="time-num">37</span><span className="time-label">SEC</span></div>
-            </div>
-            <Link to="/shop" className="see-all" style={{background:'rgba(255,255,255,0.12)',borderColor:'rgba(255,255,255,0.25)',color:'#fff'}}>
-              See All <ArrowRight size={13}/>
-            </Link>
+        <div className="ref-container ref-section" style={{ paddingTop: 0 }}>
+          <div className="ref-section-header">
+            <h2 className="ref-section-title">⚡ Flash Sales & Trending</h2>
+            <Link to="/shop?sort=featured" className="ref-see-all">View All <ArrowRight size={14} /></Link>
           </div>
-          <div className="flash-products">
-            {data.flashSale.map(p => <ProductCard key={p.id} product={p}/>)}
-          </div>
-        </section>
-      )}
-
-      {/* ══════════════════════════════════════════
-          PREMIUM BRAND SHOWCASE
-      ══════════════════════════════════════════ */}
-      <section className="main-content mc-brand-showcase section-gap reveal" aria-label="Brand promotions">
-        <div className="mc-brand-grid">
-          
-          <BrandCard
-            to="/shop?brand=apple"
-            className="apple span-col-2 span-row-2"
-            eyebrow="Apple Premium Reseller"
-            title="MacBook Pro M3<br/>& iPhone 15 Pro"
-            sub="Pro power. Pro performance."
-            cta="Shop Apple"
-            icon={<Laptop size={320} strokeWidth={0.5} className="mc-brand-icon" />}
-          />
-
-          <BrandCard
-            to="/shop?brand=samsung"
-            className="samsung span-col-2"
-            eyebrow="Samsung Official"
-            title="Galaxy AI is here"
-            sub="Unleash new ways to create and connect."
-            cta="Shop Samsung"
-            icon={<Smartphone size={180} strokeWidth={0.5} className="mc-brand-icon" />}
-          />
-
-          <BrandCard
-            to="/shop?brand=sony"
-            className="sony"
-            eyebrow="Sony Audio"
-            title="Pure Noise<br/>Cancelling"
-            sub="Immersive sound."
-            cta="Shop Sony"
-            icon={<Headphones size={180} strokeWidth={0.5} className="mc-brand-icon" />}
-          />
-
-          <BrandCard
-            to="/shop?brand=lg"
-            className="lg"
-            eyebrow="LG Electronics"
-            title="OLED<br/>Perfect Black"
-            sub="Self-lit pixels."
-            cta="Shop LG"
-            icon={<Tv size={180} strokeWidth={0.5} className="mc-brand-icon" />}
-          />
-
-          <BrandCard
-            to="/shop?brand=hp"
-            className="hp span-col-2"
-            eyebrow="HP Computing"
-            title="Omen & Envy Series"
-            sub="Unstoppable performance for work and play."
-            cta="Shop HP"
-            icon={<Laptop size={180} strokeWidth={0.5} className="mc-brand-icon" />}
-          />
-
-          <BrandCard
-            to="/shop?category=gaming"
-            className="gaming span-col-2"
-            eyebrow="Gaming Hub"
-            title="Next-Gen<br/>Entertainment"
-            sub="PlayStation, Xbox, Nintendo & accessories"
-            cta="Shop Gaming"
-            icon={<Gamepad2 size={240} strokeWidth={0.5} className="mc-brand-icon" />}
-          />
-
+          <ProductRow products={data.flashSale} />
         </div>
-      </section>
+      )}
 
       {/* ══════════════════════════════════════════
-          FEATURED PRODUCTS
+          MID-PAGE PROMO BANNER
       ══════════════════════════════════════════ */}
-      {data.featured.length > 0 && (
-        <section className="main-content products-section section-gap reveal" aria-label="Featured">
-          <div className="section-header">
-            <div><div className="section-label">Handpicked</div><h2 className="section-title">Featured Products</h2></div>
-            <Link to="/shop" className="see-all">View all <ArrowRight size={13}/></Link>
+      <div className="ref-container">
+        <div className="ref-promo-banner">
+          <div className="ref-promo-text">
+            <h2>Furnish Your Home, Stress-Free.</h2>
+            <p>Enjoy up to 20% off on all Home Appliances this month. Lock in your price today with a flexible installment plan and beat inflation.</p>
           </div>
-          <ScrollableProductSlider products={data.featured}/>
-        </section>
-      )}
+          <Link to="/shop?q=appliance" className="ref-btn ref-btn-gold">
+            View Appliance Offers <ArrowRight size={18} />
+          </Link>
+        </div>
+      </div>
 
       {/* ══════════════════════════════════════════
           NEW ARRIVALS
       ══════════════════════════════════════════ */}
       {data.newArrivals.length > 0 && (
-        <section className="main-content products-section section-gap reveal" aria-label="New arrivals">
-          <div className="section-header">
-            <div><div className="section-label">Just In</div><h2 className="section-title">New Arrivals</h2></div>
-            <Link to="/shop" className="see-all">View all <ArrowRight size={13}/></Link>
+        <div className="ref-container ref-section" style={{ paddingTop: 0 }}>
+          <div className="ref-section-header">
+            <h2 className="ref-section-title">New Arrivals</h2>
+            <Link to="/shop" className="ref-see-all">View All <ArrowRight size={14} /></Link>
           </div>
-          <ScrollableProductSlider products={data.newArrivals}/>
-        </section>
+          <ProductRow products={data.newArrivals} />
+        </div>
       )}
 
       {/* ══════════════════════════════════════════
-          DYNAMIC SECTIONS
+          TRUST STRIP
       ══════════════════════════════════════════ */}
-      {data.all?.length > 0 && dynamicSections.map(([title,sub,offset]) => {
-        const shifted = [...data.all.slice(offset%data.all.length),...data.all.slice(0,offset%data.all.length)];
-        return (
-          <section key={title} className="main-content products-section section-gap reveal" aria-label={title}>
-            <div className="section-header">
-              <div><div className="section-label">{sub}</div><h2 className="section-title">{title}</h2></div>
-              <Link to="/shop" className="see-all">View all <ArrowRight size={13}/></Link>
+      <div className="ref-container">
+        <div className="ref-trust-strip">
+          {[
+            { icon: <ShoppingCart size={28} />, label: 'Buy Now, Pay Later', sub: 'Klump BNPL integration' },
+            { icon: <ShieldCheck size={28} />, label: '100% Genuine Products', sub: 'Verified & certified' },
+            { icon: <Truck size={28} />, label: 'Nationwide Delivery', sub: 'Fast & reliable shipping' },
+            { icon: <CreditCard size={28} />, label: 'Secure Payments', sub: 'SSL encrypted checkout' },
+          ].map(item => (
+            <div key={item.label} className="ref-trust-item">
+              <div className="ref-trust-icon">{item.icon}</div>
+              <div>
+                <div className="ref-trust-label">{item.label}</div>
+                <div className="ref-trust-sub">{item.sub}</div>
+              </div>
             </div>
-            <ScrollableProductSlider products={shifted}/>
-          </section>
-        );
-      })}
+          ))}
+        </div>
+      </div>
 
       {/* ══════════════════════════════════════════
           NEWSLETTER
       ══════════════════════════════════════════ */}
-      <div className="main-content">
-        <section className="newsletter-section section-gap reveal" aria-label="Newsletter">
-          <div className="newsletter-icon"><Mail size={44} strokeWidth={1.5} color="#C9A84C"/></div>
-          <h2 className="newsletter-title">Get <span>Exclusive Deals</span> First</h2>
-          <p className="newsletter-sub">Subscribe and be the first to know about flash sales, new arrivals and installment offers.</p>
-          <form className="newsletter-form" onSubmit={e=>{e.preventDefault();showToast('Subscribed! 🎉');}}>
-            <input type="email" className="newsletter-input" placeholder="Your email address..." required/>
-            <button type="submit" className="newsletter-btn">Subscribe</button>
-          </form>
+      <div className="ref-container ref-section">
+        <section className="ref-newsletter-section" aria-label="Newsletter">
+          <div className="ref-newsletter-inner">
+            <div>
+              <h2 className="ref-newsletter-title">Get <span>Exclusive Deals</span> First</h2>
+              <p className="ref-newsletter-sub">Subscribe and be the first to know about flash sales, new arrivals and installment offers.</p>
+            </div>
+            <form
+              className="ref-newsletter-form"
+              onSubmit={e => { e.preventDefault(); showToast('Subscribed! 🎉'); setEmail(''); }}
+            >
+              <input
+                type="email"
+                className="ref-newsletter-input"
+                placeholder="Enter your email address..."
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit" className="ref-newsletter-btn">Subscribe</button>
+            </form>
+          </div>
         </section>
       </div>
-
     </main>
   );
 }
 
 /* ── GET PRODUCT ICON ─────────────────────── */
 const getProductIcon = (category) => {
-  if (!category) return <Smartphone size={48} strokeWidth={1} color="#9A8E7A"/>;
+  if (!category) return <Smartphone size={48} strokeWidth={1} color="#9A8E7A" />;
   const c = category.toLowerCase();
-  if (c.includes('phone')||c.includes('tablet')) return <Smartphone size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('laptop')||c.includes('computer')) return <Laptop size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('tv')||c.includes('television')) return <Tv size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('headphone')||c.includes('audio')) return <Headphones size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('fridge')||c.includes('home')) return <Refrigerator size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('gaming')) return <Gamepad2 size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('camera')) return <Camera size={48} strokeWidth={1} color="#9A8E7A"/>;
-  if (c.includes('watch')) return <Watch size={48} strokeWidth={1} color="#9A8E7A"/>;
-  return <Smartphone size={48} strokeWidth={1} color="#9A8E7A"/>;
+  if (c.includes('phone') || c.includes('tablet')) return <Smartphone size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('laptop') || c.includes('computer')) return <Laptop size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('tv') || c.includes('television')) return <Tv size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('headphone') || c.includes('audio')) return <Headphones size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('fridge') || c.includes('home')) return <Refrigerator size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('gaming')) return <Gamepad2 size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('camera')) return <Camera size={48} strokeWidth={1} color="#9A8E7A" />;
+  if (c.includes('watch')) return <Watch size={48} strokeWidth={1} color="#9A8E7A" />;
+  return <Smartphone size={48} strokeWidth={1} color="#9A8E7A" />;
 };
 export { getProductIcon };
