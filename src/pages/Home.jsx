@@ -199,65 +199,36 @@ export default function Home() {
         url="/"
       />
 
-      {/* ══════════════════════════════════════════
-          HERO SECTION — Sidebar + Banner
-      ══════════════════════════════════════════ */}
       <div className="ref-container">
-        <section className="ref-hero-section" aria-label="Hero">
-
-          {/* Left Sidebar */}
-          <ul className="ref-sidebar-menu" aria-label="Browse categories">
-            {sidebarCategories.map(cat => (
-              <li key={cat.q}>
-                <Link to={`/shop?q=${cat.q}`} className="ref-sidebar-link">
-                  <span className="ref-sidebar-icon">{cat.icon}</span>
-                  {cat.label}
-                  <ArrowRight size={14} className="ref-sidebar-arrow" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* Hero Banner */}
-          <div className="ref-hero-banner">
-            <div className="ref-hero-content">
-              <p className="ref-hero-eyebrow">Mac-Christar Limited</p>
-              <h1 className="ref-hero-h1">
-                {slide.title ? (
-                  <>{slide.title.split(' ').slice(0, 3).join(' ')}<br /><span>{slide.title.split(' ').slice(3).join(' ') || 'Pay On Your Terms'}</span></>
-                ) : (
-                  <>Next-Gen Electronics.<br /><span>Pay On Your Terms.</span></>
-                )}
-              </h1>
-              <p className="ref-hero-sub">
-                {slide.subtitle || 'Experience the future of tech. Shop premium smartphones, laptops, and smart home devices. Choose flexible daily, weekly, or monthly installments.'}
-              </p>
-              <div className="ref-hero-ctas">
-                <Link to={slide.link || '/shop'} className="ref-btn ref-btn-gold">
-                  Shop Latest Deals <ArrowRight size={18} />
-                </Link>
-                <Link to="/shop" className="ref-btn ref-btn-outline">
-                  Browse Catalog
-                </Link>
-              </div>
-              {/* Slide dots */}
-              {heroSlides.length > 1 && (
-                <div className="ref-hero-dots">
-                  {heroSlides.map((_, i) => (
-                    <button key={i} className={`ref-hero-dot ${i === activeSlide ? 'active' : ''}`} onClick={() => goToSlide(i)} aria-label={`Slide ${i + 1}`} />
-                  ))}
-                </div>
-              )}
+        <section className="ref-hero-bento-section" aria-label="Hero Bento Grid">
+          {/* Main Feature */}
+          <div className="ref-bento-main">
+            <div className="ref-bento-content">
+              <span className="ref-bento-badge">Premium Tech Shop</span>
+              <h1>Next-Gen Electronics.<br/><span>Pay On Your Terms.</span></h1>
+              <p>Experience the future of tech. Choose flexible daily, weekly, or monthly installments, or instant BNPL.</p>
+              <Link to="/shop" className="ref-btn ref-btn-gold">Shop Latest <ArrowRight size={16}/></Link>
             </div>
-            <div className="ref-hero-image-wrap">
-              <img 
-                src={slide.image || "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=2070&auto=format&fit=crop"} 
-                alt="Premium Electronics" 
-                className="ref-hero-img-floating" 
-                onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=1000&auto=format&fit=crop"; }}
-              />
-            </div>
+            <img src={slide.image || "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=2070&auto=format&fit=crop"} alt="Premium Tech" className="ref-bento-main-img" />
           </div>
+
+          {/* Side Box 1: BNPL Promo */}
+          <Link to="/shop" className="ref-bento-small ref-bento-bnpl">
+            <div className="ref-bento-small-text">
+              <h3>Buy Now,<br/>Pay Later</h3>
+              <p>Instant approval with Klump</p>
+            </div>
+            <div className="ref-bento-icon-bg"><Wallet size={36}/></div>
+          </Link>
+
+          {/* Side Box 2: Flash Sale Promo */}
+          <Link to="/shop?sort=featured" className="ref-bento-small ref-bento-flash">
+            <div className="ref-bento-small-text">
+              <h3>Flash Sale</h3>
+              <p>Up to 40% Off Laptops</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=1000&auto=format&fit=crop" className="ref-bento-small-img" alt="Flash Sale" />
+          </Link>
         </section>
       </div>
 

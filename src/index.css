@@ -3659,96 +3659,144 @@ a { text-decoration: none; color: inherit; }
   align-items: center;
 }
 
-/* ── HERO SECTION ────────────────────────────────────────────── */
-.ref-hero-section {
+/* ── BENTO HERO SECTION ────────────────────────────────────────────── */
+.ref-hero-bento-section {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 20px;
   margin: 24px 0;
+  min-height: 500px;
 }
 
-/* Sidebar Category Menu */
-.ref-sidebar-menu {
+.ref-bento-main {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  border: 1px solid var(--border-color, #E2E5E9);
-  border-radius: 8px;
-  list-style: none;
-  padding: 12px 0;
-  box-shadow: var(--shadow-sm);
-}
-
-[data-theme='dark'] .ref-sidebar-menu {
-  background: var(--surface, #1E1E1E);
-  border-color: var(--dark-border, rgba(255,255,255,0.09));
-}
-
-.ref-sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 18px;
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--text-main);
-  border-left: 3px solid transparent;
-  transition: all 0.2s;
-}
-
-.ref-sidebar-link:hover {
-  background: var(--page-bg, #F0F2F5);
-  border-left-color: var(--brand-red, #B30000);
-  color: var(--brand-red, #B30000);
-}
-
-.ref-sidebar-icon { color: var(--text-muted); display: flex; flex-shrink: 0; }
-.ref-sidebar-link:hover .ref-sidebar-icon { color: var(--brand-red, #B30000); }
-.ref-sidebar-arrow { margin-left: auto; opacity: 0; transition: opacity 0.2s; }
-.ref-sidebar-link:hover .ref-sidebar-arrow { opacity: 1; }
-
-/* Hero Banner */
-.ref-hero-banner {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  color: var(--text-main);
-  border-radius: 12px;
+  border-radius: 16px;
+  padding: 48px 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 40px 56px;
   position: relative;
   overflow: hidden;
-  min-height: 460px;
   box-shadow: 0 16px 40px rgba(0,0,0,0.2);
 }
 
-.ref-hero-content {
+.ref-bento-content {
   position: relative;
   z-index: 2;
-  max-width: 500px;
-  flex-shrink: 0;
+  max-width: 480px;
 }
 
-.ref-hero-image-wrap {
-  position: relative;
-  z-index: 2;
-  flex-grow: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.ref-bento-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(212,175,55,0.15);
+  color: var(--brand-gold, #D4AF37);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 20px;
+  margin-bottom: 20px;
 }
 
-.ref-hero-img-floating {
-  max-width: 120%;
-  max-height: 400px;
+.ref-bento-main h1 {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+
+.ref-bento-main h1 span { color: var(--brand-gold, #D4AF37); }
+
+.ref-bento-main p {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.ref-bento-main-img {
+  max-width: 55%;
+  max-height: 120%;
+  position: absolute;
+  right: -5%;
+  bottom: -10%;
   object-fit: contain;
-  animation: float-hero 6s ease-in-out infinite;
   filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));
+  animation: float-hero 6s ease-in-out infinite;
+}
+
+.ref-bento-small {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.ref-bento-small:hover {
+  transform: translateY(-5px);
+  border-color: var(--brand-gold, #D4AF37);
+  box-shadow: 0 12px 30px rgba(212,175,55,0.15);
+}
+
+.ref-bento-small-text {
+  position: relative;
+  z-index: 2;
+}
+
+.ref-bento-small h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.ref-bento-small p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.ref-bento-icon-bg {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  color: var(--brand-red, #B30000);
+  opacity: 0.15;
+  transform: scale(3);
+}
+
+.ref-bento-flash {
+  background: linear-gradient(135deg, rgba(179,0,0,0.1) 0%, var(--glass-bg) 100%);
+}
+
+.ref-bento-small-img {
+  position: absolute;
+  right: -10%;
+  bottom: -10%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--glass-border);
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
 }
 
 @keyframes float-hero {
@@ -3756,53 +3804,7 @@ a { text-decoration: none; color: inherit; }
   50% { transform: translateY(-15px); }
   100% { transform: translateY(0px); }
 }
-
-.ref-hero-eyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--brand-gold, #D4AF37);
-  margin-bottom: 16px;
-}
-
-.ref-hero-h1 {
-  font-family: var(--font-display);
-  font-size: 40px;
-  line-height: 1.15;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 18px;
-}
-
-.ref-hero-h1 span { color: var(--brand-gold, #D4AF37); }
-
-.ref-hero-sub {
-  font-size: 15px;
-  color: rgba(255,255,255,0.75);
-  margin-bottom: 32px;
-  line-height: 1.6;
-  max-width: 440px;
-}
-
-.ref-hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
-
-.ref-hero-dots { display: flex; gap: 8px; }
-
-.ref-hero-dot {
-  width: 26px;
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.3);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0;
-}
-
-.ref-hero-dot.active { background: var(--brand-gold, #D4AF37); width: 40px; }
-
-/* ── BUTTONS ─────────────────────────────────────────────────── */
+\n/* ── BUTTONS ─────────────────────────────────────────────────── */
 .ref-btn {
   display: inline-flex;
   align-items: center;
