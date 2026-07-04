@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Search, Heart, ShoppingCart, ShieldCheck,
-  Menu, X, Phone, MapPin
+  Search, User, Heart, ShoppingCart, ShieldCheck,
+  Menu, X, Smartphone, Laptop, Tv, Gamepad2, Home as HomeIcon, LayoutGrid
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatCurrency } from '../pages/Home';
@@ -11,14 +11,31 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const { user, cartCount, cartTotal, wishlist } = useApp();
+  const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [departments, setDepartments] = useState([]);
+  const searchRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => { setDrawerOpen(false); }, [location.pathname]);
+  // Close drawer on navigation
+  useEffect(() => { setDrawerOpen(false); setSearchOpen(false); }, [location.pathname]);
 
+  // Scroll detection for shrink effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Focus search input when search opens
+  useEffect(() => {
+    if (searchOpen) setTimeout(() => searchRef.current?.focus(), 100);
+  }, [searchOpen]);
+
+  // Load departments
   useEffect(() => {
     const unsub = listenToCategories(cats => {
       const tree = {};
@@ -26,7 +43,7 @@ export default function Navbar() {
         const dept = c.department || c.name;
         if (!tree[dept]) tree[dept] = true;
       });
-      setDepartments(Object.keys(tree).slice(0, 7));
+      setDepartments(Object.keys(tree).slice(0, 6));
     });
     return () => unsub();
   }, []);
@@ -35,97 +52,125 @@ export default function Navbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
       setSearchQuery('');
     }
   };
 
+  const getDeptIcon = (name) => {
+    const n = name.toLowerCase();
+    if (n.includes('phone') || n.includes('wearable')) return <Smartphone size={16} />;
+    if (n.includes('comput') || n.includes('laptop')) return <Laptop size={16} />;
+    if (n.includes('tv') || n.includes('audio')) return <Tv size={16} />;
+    if (n.includes('gam')) return <Gamepad2 size={16} />;
+    if (n.includes('home') || n.includes('appliance')) return <HomeIcon size={16} />;
+    return <LayoutGrid size={16} />;
+  };
+
+  const navLinks = [
+    { to: '/shop', label: 'Shop' },
+    { to: '/shop?sort=featured', label: 'Deals' },
+  ];
+
   return (
     <>
-      {/* ── TOP INFO BAR ── */}
-      <div className="mc-top-bar">
-        <div className="mc-top-bar-left">
-          <Phone size={13} />
-          <span>Need Help? Call <a href="tel:09032272294">09032272294</a></span>
-        </div>
-        <div className="mc-top-bar-right">
-          <a href="#">Track Order</a>
-          <a href="#">Buyer Protection</a>
-          <a href="#"><MapPin size={12} style={{ verticalAlign: 'middle' }} /> Store Locations</a>
+      {/* ── ANNOUNCEMENT TICKER ── */}
+      <div className="mc-ticker">
+        <div className="mc-ticker-track">
+          {['Free delivery on orders over ₦50,000', '⚡ Buy Now, Pay Later Available', '100% Genuine Products', 'Call: 09032272294', 'Flexible Installment Plans', 'Trusted & Secure Payments'].map((t, i) => (
+            <span key={i} className="mc-ticker-item">{t}</span>
+          ))}
+          {/* duplicate for seamless loop */}
+          {['Free delivery on orders over ₦50,000', '⚡ Buy Now, Pay Later Available', '100% Genuine Products', 'Call: 09032272294', 'Flexible Installment Plans', 'Trusted & Secure Payments'].map((t, i) => (
+            <span key={`d${i}`} className="mc-ticker-item">{t}</span>
+          ))}
         </div>
       </div>
 
-      {/* ── MAIN HEADER ── */}
-      <header className="mc-header">
-        <div className="mc-header-inner">
-
+      {/* ── FLOATING PILL NAVBAR ── */}
+      <div className={`mc-nav-wrapper ${scrolled ? 'scrolled' : ''}`}>
+        <nav className="mc-navbar">
           {/* Logo */}
-          <Link to="/" className="mc-logo" aria-label="Mac-Christar Home">
-            MAC-CHRISTAR<span className="mc-logo-dot">.</span>
+          <Link to="/" className="mc-logo">
+            <div className="mc-logo-emblem">
+              <span>MC</span>
+            </div>
+            <div className="mc-logo-text">
+              <span className="mc-logo-brand">MAC-CHRISTAR</span>
+              <span className="mc-logo-sub">ELECTRONICS</span>
+            </div>
           </Link>
 
-          {/* Inline Search Bar */}
-          <form className="mc-search-bar" onSubmit={handleSearch} role="search">
-            <input
-              type="text"
-              placeholder="Search for electronics, brands, models..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              aria-label="Search products"
-            />
-            <button type="submit" aria-label="Search">
-              <Search size={20} />
-            </button>
-          </form>
-
-          {/* Right Actions */}
-          <div className="mc-nav-actions">
-            <ThemeToggle />
-
-            <Link to="/wishlist" className="mc-nav-action-item" aria-label="Wishlist">
-              <div className="mc-nav-action-icon-wrap">
-                <Heart size={26} strokeWidth={1.5} />
-                {wishlist.length > 0 && <span className="mc-nav-badge">{wishlist.length}</span>}
-              </div>
-              <span className="mc-nav-action-label">Saved</span>
-            </Link>
-
-            <Link to="/cart" className="mc-nav-action-item" aria-label="Cart">
-              <div className="mc-nav-action-icon-wrap">
-                <ShoppingCart size={26} strokeWidth={1.5} />
-                {cartCount > 0 && <span className="mc-nav-badge">{cartCount}</span>}
-              </div>
-              <span className="mc-nav-action-label">Cart</span>
-            </Link>
-
-            {user?.isAdmin && (
-              <Link to="/admin" className="mc-nav-action-item mc-admin-action" aria-label="Admin Panel">
-                <div className="mc-nav-action-icon-wrap">
-                  <ShieldCheck size={26} strokeWidth={1.5} />
-                </div>
-                <span className="mc-nav-action-label">Admin</span>
-              </Link>
-            )}
-
-            {/* Mobile Hamburger */}
-            <button className="mc-hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
-              <Menu size={24} />
-            </button>
-          </div>
-        </div>
-
-        {/* ── CATEGORY NAV STRIP ── */}
-        <nav className="mc-cat-nav" aria-label="Category navigation">
-          <div className="mc-cat-nav-inner">
-            <Link to="/shop" className="mc-cat-nav-link mc-cat-nav-all">All Products</Link>
-            {departments.map(dept => (
-              <Link key={dept} to={`/shop?dept=${encodeURIComponent(dept)}`} className="mc-cat-nav-link">
+          {/* Center Nav Links (Desktop) */}
+          <div className="mc-nav-links">
+            {navLinks.map(l => (
+              <Link key={l.to} to={l.to} className={`mc-nav-link ${location.pathname === l.to ? 'active' : ''}`}>{l.label}</Link>
+            ))}
+            {departments.slice(0, 3).map(dept => (
+              <Link key={dept} to={`/shop?dept=${encodeURIComponent(dept)}`} className="mc-nav-link">
                 {dept}
               </Link>
             ))}
-            <Link to="/shop?sort=featured" className="mc-cat-nav-link mc-cat-nav-deals">⚡ Flash Deals</Link>
+          </div>
+
+          {/* Right Actions */}
+          <div className="mc-nav-actions">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
+            {/* Search Toggle */}
+            <button className="mc-icon-btn" onClick={() => setSearchOpen(true)} aria-label="Search">
+              <Search size={20} />
+            </button>
+
+            {/* Wishlist */}
+            <Link to="/wishlist" className="mc-icon-btn" aria-label="Wishlist">
+              <Heart size={20} />
+              {wishlist.length > 0 && <span className="mc-badge">{wishlist.length}</span>}
+            </Link>
+
+            {/* Admin */}
+            {user?.isAdmin && (
+              <Link to="/admin" className="mc-icon-btn mc-admin-btn" aria-label="Admin">
+                <ShieldCheck size={20} />
+              </Link>
+            )}
+
+            {/* Cart – CTA pill */}
+            <Link to="/cart" className="mc-cart-pill" aria-label="Cart">
+              <ShoppingCart size={18} />
+              <span className="mc-cart-amount">{formatCurrency(cartTotal)}</span>
+              {cartCount > 0 && <span className="mc-cart-count">{cartCount}</span>}
+            </Link>
+
+            {/* Mobile Hamburger */}
+            <button className="mc-hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+              <Menu size={22} />
+            </button>
           </div>
         </nav>
-      </header>
+      </div>
+
+      {/* ── FULLSCREEN SEARCH OVERLAY ── */}
+      {searchOpen && (
+        <div className="mc-search-overlay" onClick={() => setSearchOpen(false)}>
+          <div className="mc-search-box" onClick={e => e.stopPropagation()}>
+            <form onSubmit={handleSearch} className="mc-search-form">
+              <Search size={22} className="mc-search-icon" />
+              <input
+                ref={searchRef}
+                type="search"
+                placeholder="Search phones, laptops, TVs..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="mc-search-input"
+              />
+              <button type="submit" className="mc-search-submit">Go</button>
+            </form>
+            <button className="mc-search-close" onClick={() => setSearchOpen(false)}><X size={20} /></button>
+          </div>
+        </div>
+      )}
 
       {/* ── MOBILE DRAWER ── */}
       {drawerOpen && (
@@ -133,25 +178,20 @@ export default function Navbar() {
           <aside className="mc-drawer" onClick={e => e.stopPropagation()}>
             <div className="mc-drawer-header">
               <Link to="/" className="mc-logo" onClick={() => setDrawerOpen(false)}>
-                MAC-CHRISTAR<span className="mc-logo-dot">.</span>
+                <div className="mc-logo-emblem"><span>MC</span></div>
+                <div className="mc-logo-text">
+                  <span className="mc-logo-brand">MAC-CHRISTAR</span>
+                </div>
               </Link>
-              <button className="mc-icon-btn" onClick={() => setDrawerOpen(false)} aria-label="Close menu">
-                <X size={22} />
-              </button>
+              <button className="mc-icon-btn" onClick={() => setDrawerOpen(false)}><X size={22} /></button>
             </div>
 
-            {/* Mobile Search */}
-            <form className="mc-drawer-search" onSubmit={e => { handleSearch(e); setDrawerOpen(false); }}>
-              <input type="text" placeholder="Search products..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-              <button type="submit" aria-label="Search"><Search size={16} /></button>
-            </form>
-
-            <div className="mc-drawer-section-label">Shop Categories</div>
+            <div className="mc-drawer-section-label">Navigation</div>
             <nav className="mc-drawer-nav">
-              <Link to="/shop" className="mc-drawer-link" onClick={() => setDrawerOpen(false)}>All Products</Link>
+              <Link to="/shop" className="mc-drawer-link" onClick={() => setDrawerOpen(false)}>Shop All</Link>
               {departments.map(dept => (
                 <Link key={dept} to={`/shop?dept=${encodeURIComponent(dept)}`} className="mc-drawer-link" onClick={() => setDrawerOpen(false)}>
-                  {dept}
+                  <span className="mc-drawer-link-icon">{getDeptIcon(dept)}</span>{dept}
                 </Link>
               ))}
             </nav>
