@@ -5054,3 +5054,72 @@ a.ref-footer-contact-value:hover { color: var(--brand-gold, #D4AF37); }
     gap: 4px;
   }
 }
+
+/* ══════════════════════════════════════════════════
+   HERO BENTO GRID MOBILE RESPONSIVENESS
+══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .ref-hero-bento-section { 
+    grid-template-columns: 1fr; 
+    grid-template-rows: auto; 
+    min-height: auto; 
+    gap: 16px;
+  }
+  
+  .ref-bento-main { 
+    grid-column: 1 / 2; 
+    grid-row: 1 / 2; 
+    padding: 32px 24px 0px 24px; 
+    text-align: center; 
+    justify-content: center; 
+    align-items: center;
+  }
+  
+  .ref-bento-content { 
+    max-width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+  }
+  
+  /* Reset the absolutely positioned image into document flow */
+  .ref-bento-main-img { 
+    position: relative;
+    right: auto; 
+    bottom: auto; 
+    transform: none; 
+    animation: none; 
+    width: 90%;
+    max-width: 280px;
+    height: auto;
+    object-fit: contain;
+    margin-top: 24px;
+    margin-bottom: -10px;
+  }
+  
+  .ref-bento-small { 
+    padding: 24px; 
+    height: auto;
+    min-height: 140px;
+  }
+  
+  .ref-bento-small-img { 
+    width: 100px; 
+    height: 100px; 
+    right: -10px;
+    bottom: -10px;
+  }
+
+  .ref-bento-icon-bg {
+    transform: scale(1.5);
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ref-bento-main h1 { font-size: 32px; line-height: 1.1; margin-bottom: 12px; }
+  .ref-bento-main p { font-size: 14px; margin-bottom: 24px; }
+  .ref-bento-small-text h3 { font-size: 18px; line-height: 1.2; }
+  .ref-bento-small p { font-size: 13px; max-width: 60%; }
+}
