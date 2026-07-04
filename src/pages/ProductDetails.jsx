@@ -162,7 +162,7 @@ export default function ProductDetails() {
             <span className="stars" style={{ color: 'var(--primary)', fontSize: '16px', letterSpacing: '2px' }}>
               {'★'.repeat(Math.max(0, Math.min(5, Math.floor(Number(product.rating) || 0))))}{'☆'.repeat(Math.max(0, 5 - Math.min(5, Math.floor(Number(product.rating) || 0))))}
             </span>
-            <span style={{ fontWeight: 700, color: 'var(--white)', marginLeft: '8px' }}>{Number(product.rating) || 0}</span>
+            <span style={{ fontWeight: 700,  marginLeft: '8px' }}>{Number(product.rating) || 0}</span>
             <span>({Number(product.reviews) || 0} verified ratings)</span>
           </div>
 
@@ -180,7 +180,7 @@ export default function ProductDetails() {
 
           {normalizedColors.length > 0 && (
             <div className="pd-variants">
-              <div className="variant-title">Color: <span style={{ color: 'var(--white)' }}>{selectedColor}</span></div>
+              <div className="variant-title">Color: <span >{selectedColor}</span></div>
               <div className="variant-options">
                 {normalizedColors.map(col => (
                   <button 
@@ -233,7 +233,7 @@ export default function ProductDetails() {
           <hr style={{ border: 'none', borderTop: '1px solid var(--dark-border)', margin: 0 }} />
 
           <div style={{ padding: '20px' }}>
-            <h3 style={{ fontSize: '15px', marginBottom: '12px', color: 'var(--white)' }}>Select Payment Option</h3>
+            <h3 style={{ fontSize: '15px', marginBottom: '12px' }}>Select Payment Option</h3>
             
             {/* OPTION 1: FULL PAYMENT */}
             <div style={{ padding: '16px', border: '2px solid var(--primary)', borderRadius: 'var(--radius-sm)', marginBottom: '16px', background: 'rgba(153,0,0,0.02)' }}>
@@ -260,11 +260,11 @@ export default function ProductDetails() {
             {/* OPTION 2: KLUMP - BNPL */}
             <div style={{ padding: '16px', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-sm)', marginBottom: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <strong style={{ fontSize: '14px', color: 'var(--white)' }}>Buy Now, Pay Later</strong>
+                <strong style={{ fontSize: '14px' }}>Buy Now, Pay Later</strong>
                 <span style={{ fontSize: '12px', background: 'var(--black)', padding: '4px 8px', borderRadius: '4px', fontWeight: 700, border: '1px solid var(--dark-border)' }}>Klump</span>
               </div>
               <p style={{ fontSize: '12px', color: 'var(--gray-1)', marginBottom: '12px', lineHeight: '1.4' }}>Receive your product immediately and pay in 4 interest-free installments.</p>
-              <button className="pas-add-btn" style={{ background: 'var(--black)', color: 'var(--white)', border: '1px solid var(--dark-border)' }} onClick={() => {
+              <button className="pas-add-btn" style={{ background: 'var(--black)',  border: '1px solid var(--dark-border)' }} onClick={() => {
                 alert("Klump checkout placeholder. This will trigger the Klump widget.");
               }}>
                 Pay with Klump
@@ -278,12 +278,12 @@ export default function ProductDetails() {
                 <span style={{ fontSize: '12px', background: 'rgba(212,175,55,0.1)', color: 'var(--secondary-dark)', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>Kora Pay</span>
               </div>
               <p style={{ fontSize: '12px', color: 'var(--gray-1)', marginBottom: '12px', lineHeight: '1.4' }}>Pay daily, weekly, or monthly. Product releases after full payment.</p>
-              <select style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '4px', border: '1px solid var(--dark-border)', background: 'var(--black)', color: 'var(--white)', outline: 'none' }}>
+              <select style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '4px', border: '1px solid var(--dark-border)', background: 'var(--black)',  outline: 'none' }}>
                 <option>Monthly Plan (3 months)</option>
                 <option>Weekly Plan (12 weeks)</option>
                 <option>Daily Plan (90 days)</option>
               </select>
-              <button className="pas-add-btn" style={{ background: 'var(--secondary)', color: 'var(--white)' }} onClick={() => {
+              <button className="pas-add-btn" style={{ background: 'var(--secondary)' }} onClick={() => {
                 alert("This will start a Kora Pay installment subscription for this item.");
               }}>
                 Start Installment Plan

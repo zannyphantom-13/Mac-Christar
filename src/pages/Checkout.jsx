@@ -125,8 +125,7 @@ export default function Checkout() {
         status: 'Pending Verification',
         initialPaymentStatus: 'Pending',
         receiptUrl: receiptUrl,
-        createdAt: new Date(),
-      };
+        createdAt: new Date() };
 
       await addDoc(collection(db, 'orders'), orderData);
       
@@ -141,7 +140,7 @@ export default function Checkout() {
     }
   };
 
-  const inputStyle = { width: '100%', background: 'var(--dark)', border: '1.5px solid var(--dark-border)', color: 'var(--white)', padding: '12px 16px', borderRadius: 'var(--radius-sm)', fontSize: '14px' };
+  const inputStyle = { width: '100%', background: 'var(--dark)', border: '1.5px solid var(--dark-border)',  padding: '12px 16px', borderRadius: 'var(--radius-sm)', fontSize: '14px' };
 
   if (authLoading || (!user && !placed)) {
     return (
@@ -166,7 +165,7 @@ export default function Checkout() {
           <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '20px', marginBottom: '32px' }}>Order Total: {formatCurrency(finalTotal)}</p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <Link to="/profile" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--primary)', color: 'var(--black)', padding: '14px 28px', borderRadius: 'var(--radius-md)', fontWeight: 800 }}>Track Order <ChevronRight size={16} /></Link>
-            <Link to="/shop" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--white)', padding: '14px 28px', borderRadius: 'var(--radius-md)', fontWeight: 700 }}>Continue Shopping</Link>
+            <Link to="/shop" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--dark-card)', border: '1px solid var(--dark-border)',  padding: '14px 28px', borderRadius: 'var(--radius-md)', fontWeight: 700 }}>Continue Shopping</Link>
           </div>
         </div>
       ) : (
@@ -238,7 +237,7 @@ export default function Checkout() {
                       <div>
                         <div style={{ fontWeight: 700, fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           {method.label}
-                          {method.disabled && <span style={{ fontSize: '10px', background: 'var(--danger)', color: 'var(--white)', padding: '2px 6px', borderRadius: '10px' }}>Soon</span>}
+                          {method.disabled && <span style={{ fontSize: '10px', background: 'var(--danger)',  padding: '2px 6px', borderRadius: '10px' }}>Soon</span>}
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--gray-1)' }}>{method.desc}</div>
                       </div>
@@ -248,7 +247,7 @@ export default function Checkout() {
                     </div>
                   ))}
                   <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
-                    <button onClick={() => setStep(0)} style={{ flex: 1, background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--white)', padding: '14px', borderRadius: 'var(--radius-md)', fontWeight: 700, cursor: 'pointer' }}>Back</button>
+                    <button onClick={() => setStep(0)} style={{ flex: 1, background: 'var(--dark)', border: '1px solid var(--dark-border)',  padding: '14px', borderRadius: 'var(--radius-md)', fontWeight: 700, cursor: 'pointer' }}>Back</button>
                     <button onClick={() => setStep(2)} style={{ flex: 2, background: 'var(--primary)', color: 'var(--black)', padding: '14px', borderRadius: 'var(--radius-md)', fontWeight: 800, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>Review Order <ChevronRight size={18} /></button>
                   </div>
                 </div>
@@ -278,12 +277,12 @@ export default function Checkout() {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                           <span style={{ color: 'var(--gray-1)', fontSize: '13px' }}>Account Number</span>
-                          <span style={{ fontWeight: 800, fontSize: '18px', color: 'var(--white)', letterSpacing: '1px' }}>0125986348</span>
+                          <span style={{ fontWeight: 800, fontSize: '18px',  letterSpacing: '1px' }}>0125986348</span>
                         </div>
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--white)', marginBottom: '8px' }}>Upload Payment Receipt <span style={{ color: 'var(--danger)' }}>*</span></label>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700,  marginBottom: '8px' }}>Upload Payment Receipt <span style={{ color: 'var(--danger)' }}>*</span></label>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <label style={{ flex: 1, background: 'var(--dark-card)', border: '1.5px dashed var(--dark-border)', padding: '16px', borderRadius: 'var(--radius-sm)', textAlign: 'center', cursor: 'pointer', transition: 'var(--transition)' }}>
                             <Upload size={20} color="var(--primary)" style={{ margin: '0 auto 8px' }} />
@@ -310,11 +309,11 @@ export default function Checkout() {
                       </p>
 
                       <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--white)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Select Duration</label>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700,  marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Select Duration</label>
                         <select 
                           value={formData.installmentPlan}
                           onChange={(e) => setFormData(p => ({ ...p, installmentPlan: e.target.value }))}
-                          style={{ width: '100%', background: 'var(--black)', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-sm)', padding: '12px 14px', fontSize: '14px', color: 'var(--white)', outline: 'none' }}
+                          style={{ width: '100%', background: 'var(--black)', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-sm)', padding: '12px 14px', fontSize: '14px',  outline: 'none' }}
                         >
                           <optgroup label="Weekly Plans (2% interest/week)">
                             {INSTALLMENT_OPTIONS.filter(o => o.type === 'weekly').map(opt => (
@@ -340,7 +339,7 @@ export default function Checkout() {
                         </div>
                         <div style={{ height: '1px', background: 'var(--dark-border)', margin: '4px 0' }}></div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ color: 'var(--white)', fontSize: '14px', fontWeight: 800 }}>Total Payable</span>
+                          <span style={{  fontSize: '14px', fontWeight: 800 }}>Total Payable</span>
                           <span style={{ fontWeight: 800, fontSize: '16px', color: 'var(--primary)' }}>{formatCurrency(grandTotal)}</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
@@ -354,7 +353,7 @@ export default function Checkout() {
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--white)', marginBottom: '8px' }}>Upload Initial Deposit Receipt <span style={{ color: 'var(--danger)' }}>*</span></label>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700,  marginBottom: '8px' }}>Upload Initial Deposit Receipt <span style={{ color: 'var(--danger)' }}>*</span></label>
                         <p style={{ fontSize: '12px', color: 'var(--gray-1)', marginBottom: '12px' }}>Please transfer your deposit of <strong>{formatCurrency(depositAmount)}</strong> to Wema Bank (0125986348) - Mac-Christar Limited.</p>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <label style={{ flex: 1, background: 'var(--dark-card)', border: '1.5px dashed var(--dark-border)', padding: '16px', borderRadius: 'var(--radius-sm)', textAlign: 'center', cursor: 'pointer', transition: 'var(--transition)' }}>
@@ -416,7 +415,7 @@ export default function Checkout() {
                   )}
 
                   <div style={{ display: 'flex', gap: '12px' }}>
-                    <button onClick={() => setStep(1)} disabled={loading} style={{ flex: 1, background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--white)', padding: '14px', borderRadius: 'var(--radius-md)', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>Back</button>
+                    <button onClick={() => setStep(1)} disabled={loading} style={{ flex: 1, background: 'var(--dark)', border: '1px solid var(--dark-border)',  padding: '14px', borderRadius: 'var(--radius-md)', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>Back</button>
                     <button onClick={handlePlaceOrderClick} disabled={loading} style={{ flex: 2, background: 'var(--primary)', color: 'var(--black)', padding: '14px', borderRadius: 'var(--radius-md)', fontWeight: 800, border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 8px 24px var(--primary-glow)' }}>
                       {loading ? <><Loader2 className="spinner" size={18} /> Processing...</> : <><Zap size={18} /> Place Order — {formatCurrency(grandTotal)}</>}
                     </button>
@@ -436,7 +435,7 @@ export default function Checkout() {
                       <img src={item.imgUrl || item.image || item.img} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display='none'} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, color: 'var(--white)', marginBottom: '2px', lineHeight: 1.3 }}>{item.name}</div>
+                      <div style={{ fontWeight: 600,  marginBottom: '2px', lineHeight: 1.3 }}>{item.name}</div>
                       <div style={{ color: 'var(--gray-1)', fontSize: '11px' }}>Qty: {item.qty}</div>
                     </div>
                     <div style={{ fontWeight: 700 }}>{formatCurrency(item.price * item.qty)}</div>
@@ -445,8 +444,8 @@ export default function Checkout() {
               </div>
 
               <div style={{ borderTop: '1px solid var(--dark-border)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--gray-1)' }}><span>Subtotal</span><span style={{ color: 'var(--white)', fontWeight: 600 }}>{formatCurrency(cartTotal)}</span></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--gray-1)' }}><span>Delivery</span><span style={{ color: 'var(--white)', fontWeight: 600 }}>{formatCurrency(delivery)}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--gray-1)' }}><span>Subtotal</span><span style={{  fontWeight: 600 }}>{formatCurrency(cartTotal)}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--gray-1)' }}><span>Delivery</span><span style={{  fontWeight: 600 }}>{formatCurrency(delivery)}</span></div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, paddingTop: '12px', borderTop: '1px solid var(--dark-border)', marginTop: '4px' }}><span>Total</span><span style={{ color: 'var(--primary)' }}>{formatCurrency(grandTotal)}</span></div>
               </div>
             </div>
@@ -458,23 +457,23 @@ export default function Checkout() {
       {activeLegal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backdropFilter: 'blur(4px)' }}>
           <div style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-lg)', padding: '32px', width: '100%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', position: 'relative' }}>
-            <button onClick={() => setActiveLegal(null)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--white)', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+            <button onClick={() => setActiveLegal(null)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'var(--dark)', border: '1px solid var(--dark-border)',  width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <X size={16} />
             </button>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 800, marginBottom: '20px', color: 'var(--white)' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 800, marginBottom: '20px' }}>
               {activeLegal === 'terms' ? 'Terms & Conditions' : 'Privacy Policy'}
             </h3>
             <div style={{ color: 'var(--gray-1)', fontSize: '14px', lineHeight: 1.6, marginBottom: '32px' }}>
               {activeLegal === 'terms' ? (
                 <>
                   <p style={{ marginBottom: '16px' }}>By proceeding, you agree to Mac-Christar Limited's terms of service. All purchases are final once delivered and verified in good condition.</p>
-                  <h4 style={{ color: 'var(--white)', fontWeight: 700, marginBottom: '8px' }}>No-Return & No-Refund Policy</h4>
+                  <h4 style={{  fontWeight: 700, marginBottom: '8px' }}>No-Return & No-Refund Policy</h4>
                   <p>Please note that we operate a strict No-Return and No-Refund policy. Once an item is purchased and collected/delivered, it cannot be returned for a refund or exchanged unless it is Dead On Arrival (DOA) and verified by our technicians within 24 hours of delivery.</p>
                 </>
               ) : (
                 <>
                   <p style={{ marginBottom: '16px' }}>We value your privacy and are committed to protecting your personal data in accordance with the Nigerian Data Protection Regulation (NDPR).</p>
-                  <h4 style={{ color: 'var(--white)', fontWeight: 700, marginBottom: '8px' }}>Data Processing Consent</h4>
+                  <h4 style={{  fontWeight: 700, marginBottom: '8px' }}>Data Processing Consent</h4>
                   <p>By accepting this policy, you consent to our collection, use, and processing of your personal information (including name, phone, address, and email) solely for the purpose of fulfilling your order, providing customer support, and occasionally sending you updates about our services.</p>
                 </>
               )}

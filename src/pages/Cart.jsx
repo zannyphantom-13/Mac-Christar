@@ -48,16 +48,16 @@ export default function Cart() {
                   {/* Details */}
                   <div className="item-details">
                     <div style={{ fontSize: '10px', color: 'var(--gray-1)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '2px' }}>{item.brand}</div>
-                    <Link to={`/product/${item.id}`} className="item-name" style={{ color: 'var(--white)', marginBottom: '10px' }}>{item.name}</Link>
+                    <Link to={`/product/${item.id}`} className="item-name" style={{  marginBottom: '10px' }}>{item.name}</Link>
 
                     {/* Qty + Remove row */}
                     <div className="cart-row-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-                        <button onClick={() => updateQty(item.id, -1)} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--dark)', color: 'var(--white)', border: 'none', cursor: 'pointer' }}>
+                        <button onClick={() => updateQty(item.id, -1)} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--dark)',  border: 'none', cursor: 'pointer' }}>
                           <Minus size={13} />
                         </button>
                         <span style={{ minWidth: '36px', textAlign: 'center', fontSize: '14px', fontWeight: 700 }}>{item.qty}</span>
-                        <button onClick={() => updateQty(item.id, 1)} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--dark)', color: 'var(--white)', border: 'none', cursor: 'pointer' }}>
+                        <button onClick={() => updateQty(item.id, 1)} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--dark)',  border: 'none', cursor: 'pointer' }}>
                           <Plus size={13} />
                         </button>
                       </div>
@@ -83,7 +83,7 @@ export default function Cart() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--gray-1)' }}>
                   <span>Subtotal ({items.length} items)</span>
-                  <span style={{ color: 'var(--white)', fontWeight: 600 }}>{formatCurrency(subtotal)}</span>
+                  <span style={{  fontWeight: 600 }}>{formatCurrency(subtotal)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--gray-1)' }}>
                   <span>Delivery</span>
@@ -102,9 +102,9 @@ export default function Cart() {
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--dark)', border: '1.5px solid var(--dark-border)', borderRadius: 'var(--radius-sm)', padding: '0 12px', minWidth: 0 }}>
                     <Tag size={14} color="var(--gray-1)" style={{ flexShrink: 0 }} />
-                    <input type="text" placeholder="Coupon code" value={coupon} onChange={e => setCoupon(e.target.value)} style={{ background: 'none', color: 'var(--white)', fontSize: '13px', flex: 1, padding: '10px 0', minWidth: 0 }} />
+                    <input type="text" placeholder="Coupon code" value={coupon} onChange={e => setCoupon(e.target.value)} style={{ background: 'none',  fontSize: '13px', flex: 1, padding: '10px 0', minWidth: 0 }} />
                   </div>
-                  <button style={{ background: 'var(--dark-border)', color: 'var(--white)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: '13px', cursor: 'pointer', border: 'none', flexShrink: 0 }}>Apply</button>
+                  <button style={{ background: 'var(--dark-border)',  padding: '10px 14px', borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: '13px', cursor: 'pointer', border: 'none', flexShrink: 0 }}>Apply</button>
                 </div>
               </div>
 
