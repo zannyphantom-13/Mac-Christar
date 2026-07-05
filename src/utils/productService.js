@@ -1,38 +1,60 @@
-import { allProducts } from '../data/productData';
+import { db } from '../firebase';
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
-// Fetch all products (Mock)
+const productsCollection = collection(db, 'products');
+
 export const getProducts = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(allProducts);
-    }, 500); // simulate network latency
-  });
+  try {
+    const snapshot = await getDocs(productsCollection);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
 };
 
-// Fetch single product by ID (Mock)
 export const getProduct = async (id) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const product = allProducts.find(p => p.id === id);
-      resolve(product || null);
-    }, 300);
-  });
+  try {
+    const docRef = doc(db, 'products', id);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      return { id: snapshot.id, ...snapshot.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return null;
+  }
 };
 
-// Add a new product (Mock Admin only)
 export const addProduct = async (productData) => {
-  console.log("Mock addProduct:", productData);
-  return "mock-id-" + Date.now();
+  try {
+    const docRef = await addDoc(productsCollection, productData);
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    throw error;
+  }
 };
 
-// Update an existing product (Mock Admin only)
 export const updateProduct = async (id, productData) => {
-  console.log("Mock updateProduct:", id, productData);
-  return true;
+  try {
+    const docRef = doc(db, 'products', id);
+    await updateDoc(docRef, productData);
+    return true;
+  } catch (error) {
+    console.error("Error updating product:", error);
+    throw error;
+  }
 };
 
-// Delete a product (Mock Admin only)
 export const deleteProduct = async (id) => {
-  console.log("Mock deleteProduct:", id);
-  return true;
+  try {
+    const docRef = doc(db, 'products', id);
+    await deleteDoc(docRef);
+    return true;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
 };

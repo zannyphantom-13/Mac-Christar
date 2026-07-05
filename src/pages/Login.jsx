@@ -15,9 +15,9 @@ export default function Login() {
   const location = useLocation();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Navigate only after the user context is fully populated (including isAdmin)
+  // Navigate when the user context is populated (including isAdmin)
   React.useEffect(() => {
-    if (isLoggingIn && user) {
+    if (user) {
       const searchParams = new URLSearchParams(location.search);
       const redirectUrl = searchParams.get('redirect');
       if (redirectUrl) {
@@ -26,7 +26,7 @@ export default function Login() {
         navigate(user.isAdmin ? '/admin' : '/');
       }
     }
-  }, [user, isLoggingIn, navigate, location.search]);
+  }, [user, navigate, location.search]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -40,7 +40,6 @@ export default function Login() {
     } catch (err) {
       console.error(err);
       setError(err.message || 'Failed to sign in.');
-    } finally {
       setLoading(false);
     }
   };

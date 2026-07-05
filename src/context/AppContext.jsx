@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { auth, db } from '../firebase';
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const AppContext = createContext();
 
@@ -41,43 +44,59 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
-  // Mock Auth Listener
+  // Real Firebase Auth Listener
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      // For now, no user is logged in by default
-      setUser(null);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Fetch additional user info from Firestore (e.g. isAdmin)
+        try {
+          const userDocRef = doc(db, 'users', currentUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            setUser({ ...currentUser, ...userDoc.data() });
+          } else {
+            setUser(currentUser);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          setUser(currentUser);
+        }
+      } else {
+        setUser(null);
+      }
       setAuthLoading(false);
-    }, 500);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email === 'admin@macchristar.ng') {
-          setUser({ uid: 'mock-admin-1', email, name: 'Admin User', isAdmin: true });
-          resolve();
-        } else if (password === 'password') {
-          setUser({ uid: 'mock-user-1', email, name: 'Test User', isAdmin: false });
-          resolve();
-        } else {
-          reject(new Error("Invalid credentials. Try 'password'."));
-        }
-      }, 800);
-    });
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      throw new Error(error.message || "Invalid credentials.");
+    }
   };
 
   const register = async (name, email, password) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setUser({ uid: 'mock-user-' + Date.now(), email, name, isAdmin: false });
-        resolve();
-      }, 800);
-    });
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // Store additional user data in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        name: name,
+        email: email,
+        isAdmin: false,
+        createdAt: new Date().toISOString()
+      });
+    } catch (error) {
+      throw new Error(error.message || "Registration failed.");
+    }
   };
 
   const logout = async () => {
-    setUser(null);
+    await signOut(auth);
   };
 
   // Cart Functions
