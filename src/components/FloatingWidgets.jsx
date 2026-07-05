@@ -24,7 +24,7 @@ export default function FloatingWidgets() {
     });
   };
 
-  const whatsappNumber = "2349032272294"; // Replaced with actual number (formatted with country code for WA link)
+  const whatsappNumber = "2349035636810"; // Mac-Christar WhatsApp number (formatted with country code)
   const whatsappMessage = "Hello! I'm interested in your products.";
 
   return (
