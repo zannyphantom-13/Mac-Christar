@@ -271,20 +271,17 @@ export default function ProductDetails() {
               </button>
             </div>
 
-            {/* OPTION 3: LAYAWAY INSTALLMENT (KORA PAY) */}
+            {/* OPTION 3: LAYAWAY INSTALLMENT */}
             <div style={{ padding: '16px', border: '1px solid var(--secondary)', borderRadius: 'var(--radius-sm)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <strong style={{ fontSize: '14px', color: 'var(--secondary)' }}>Layaway Installment</strong>
-                <span style={{ fontSize: '12px', background: 'rgba(212,175,55,0.1)', color: 'var(--secondary-dark)', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>Kora Pay</span>
+                <span style={{ fontSize: '12px', background: 'rgba(212,175,55,0.1)', color: 'var(--secondary-dark)', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>Mac-Christar Plan</span>
               </div>
-              <p style={{ fontSize: '12px', color: 'var(--gray-1)', marginBottom: '12px', lineHeight: '1.4' }}>Pay daily, weekly, or monthly. Product releases after full payment.</p>
-              <select style={{ width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '4px', border: '1px solid var(--dark-border)', background: 'var(--black)',  outline: 'none' }}>
-                <option>Monthly Plan (3 months)</option>
-                <option>Weekly Plan (12 weeks)</option>
-                <option>Daily Plan (90 days)</option>
-              </select>
-              <button className="pas-add-btn" style={{ background: 'var(--secondary)' }} onClick={() => {
-                alert("This will start a Kora Pay installment subscription for this item.");
+              <p style={{ fontSize: '12px', color: 'var(--gray-1)', marginBottom: '12px', lineHeight: '1.4' }}>Pay weekly or monthly. Product releases after full payment. No hidden charges.</p>
+              <button className="pas-add-btn" style={{ background: 'var(--secondary)', color: 'var(--black)' }} onClick={() => {
+                const productToAdd = selectedColor ? { ...product, selectedColor } : product;
+                addToCart(productToAdd, qty);
+                navigate('/checkout');
               }}>
                 Start Installment Plan
               </button>

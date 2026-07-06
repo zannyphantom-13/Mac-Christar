@@ -50,7 +50,7 @@ export default function Footer() {
 
             {/* Payment Badges */}
             <div className="ref-payment-methods">
-              {['VISA', 'Mastercard', 'Kora Pay', 'Bank Transfer'].map(p => (
+              {['VISA', 'Mastercard', 'Klump', 'Bank Transfer'].map(p => (
                 <span key={p} className="ref-pay-icon">
                   <CreditCard size={11} style={{ marginRight: '4px', verticalAlign: 'middle' }} />{p}
                 </span>
