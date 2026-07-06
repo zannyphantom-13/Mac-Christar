@@ -65,6 +65,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const [klumpOpen, setKlumpOpen] = useState(false);
   const [formData, setFormData] = useState({ 
     fullName: user?.firstName ? `${user.firstName} ${user.lastName || ''}` : '', 
     email: user?.email || '',
@@ -129,6 +130,7 @@ export default function Checkout() {
 
   const handleKlumpPayment = async () => {
     setLoading(true);
+    setKlumpOpen(true);
     setError('');
     try {
       await loadKlumpScript();
@@ -156,19 +158,27 @@ export default function Checkout() {
           })),
         },
         onSuccess: (data) => {
+          setKlumpOpen(false);
           const klumpRef = data?.data?.reference || `klp-${Date.now()}`;
           submitOrder(klumpRef);
         },
         onError: () => {
           setError("Klump payment failed or was declined. Please try again or use another method.");
           setLoading(false);
+          setKlumpOpen(false);
         },
-        onLoad: () => setLoading(false),
-        onClose: () => setLoading(false),
+        onLoad: () => {
+          // Keep loading true if we want the spinner, or false if klump handles it
+        },
+        onClose: () => {
+          setLoading(false);
+          setKlumpOpen(false);
+        },
       });
     } catch (err) {
       setError(err.message || "Failed to load Klump. Please check your connection.");
       setLoading(false);
+      setKlumpOpen(false);
     }
   };
 
@@ -238,8 +248,25 @@ export default function Checkout() {
 
   return (
     <main className="main-content" style={{ padding: '28px 20px' }}>
-      <div id="klump__checkout"></div>
-      {placed ? (
+      {klumpOpen && (
+        <div style={{ textAlign: 'center', marginBottom: '20px', padding: '20px', background: 'var(--dark-card)', borderRadius: 'var(--radius-md)' }}>
+          <p style={{ color: 'var(--warning)', marginBottom: '16px' }}>Klump payment is processing. If the popup didn't appear or you want to cancel, click below.</p>
+          <button 
+            onClick={() => {
+              const klumpDiv = document.getElementById('klump__checkout');
+              if(klumpDiv) klumpDiv.innerHTML = '';
+              setKlumpOpen(false);
+              setLoading(false);
+              setError('Klump payment cancelled by user.');
+            }}
+            style={{ padding: '12px 24px', background: 'var(--dark)', color: 'var(--white)', border: '1px solid var(--dark-border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: 600 }}
+          >
+            Cancel Payment
+          </button>
+        </div>
+      )}
+      <div id="klump__checkout" style={{ display: klumpOpen ? 'block' : 'none' }}></div>
+      {!klumpOpen && placed ? (
         <div style={{ maxWidth: '600px', margin: '60px auto', textAlign: 'center' }}>
           <div style={{ width: '100px', height: '100px', background: 'rgba(0,230,118,0.1)', border: '3px solid var(--success)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
             <CheckCircle size={52} color="var(--success)" strokeWidth={1.5} />
